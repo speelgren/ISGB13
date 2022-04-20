@@ -2,5 +2,3 @@
 ISGB13
 
 XML & JSON
-
-Robin Johansson Speelgren
