@@ -89,15 +89,17 @@ function search(query, content) {
       let infoCardTitleNode = document.createTextNode('Information');
       infoCardTitle.appendChild(infoCardTitleNode);
 
+      let lineBreak = document.createElement('hr');
+      infoCardTitle.appendChild(lineBreak);
+
       let i = Math.floor(Math.random() * data.moves.length);
       let j = Math.floor(Math.random() * data.moves.length);
       let favMove = data.moves[i].move.name;
       let leastFavMove = data.moves[j].move.name;
 
-      let infoCardHeightP = document.createElement('pre');
-      infoCardHeightP.classList.add('card-text');
-      let infoCardHeightTextNode = document.createTextNode(
-        '\n' +
+      let infoCardPre = document.createElement('pre');
+      infoCardPre.classList.add('card-text');
+      let infoCardTextNode = document.createTextNode(
         'type: ' + data.types[0].type.name + '\n' +
         'height: ' + data.height * 10 + 'cm' + '\n' +
         'weight: ' + data.weight / 10 + 'kg' + '\n\n' +
@@ -105,8 +107,10 @@ function search(query, content) {
         'least favourite move: ' + leastFavMove +
         '\n\n'
         );
-      infoCardHeightP.appendChild(infoCardHeightTextNode);
-      infoCardBody.appendChild(infoCardHeightP);
+      infoCardPre.appendChild(infoCardTextNode);
+      let infoCardParagraph = document.createElement('p');
+      infoCardParagraph.appendChild(infoCardPre);
+      infoCardBody.appendChild(infoCardParagraph);
   }).catch((error) => {
 
     console.log(error);
