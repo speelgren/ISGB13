@@ -12,21 +12,32 @@
         font-family: monospace;
       }
       .card {
-        margin: 0 5px 0 0;
+        margin: 0 5px 5px 0;
         border: 1px solid #1D3557;
         border-radius: 0;
       }
       #nav-img {
         height: 25px;
       }
+    /*
+     * https://stackoverflow.com/questions/48328514/how-to-display-table-in-two-columns
+    */
+      table, tr, td {
+        display: block !important;
+      }
+      tr {
+        float: left !important;
+        width: 50% !important;
+      }
     </style>
   </head>
 <body>
   <div class="p-5 bg-danger text-white text-center">
-    <h1>Pokedex</h1>
+    <h1>POKÉDEX</h1>
     <p>JSON API Laboration | ISGB13 Portabla Format</p>
     <a class="text-info" href="https://pokeapi.co/" target="_blank">https://pokeapi.co/</a>
   </div>
+
   <nav class="navbar navbar-expand-lg navbar-light bg-muted">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -50,7 +61,6 @@
         <input class="form-control mr-sm-2" type="search" id="search" placeholder="Enter Name or ID" aria-label="Search">
         <button class="btn btn-danger my-2 my-sm-0" type="submit">Search Pokedex</button>
       </form>
-
     </div>
   </nav>
 

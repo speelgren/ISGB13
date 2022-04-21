@@ -49,6 +49,7 @@ function search(query, content) {
       //Image card
       let card = document.createElement('div');
       card.style.width = '25rem';
+      card.style.height = '35rem';
       card.classList.add('card');
       content.appendChild(card);
 
@@ -80,13 +81,14 @@ function search(query, content) {
       let infoCardBody = document.createElement('div');
       infoCardBody.classList.add('card-body');
       infoCardBody.style.backgroundColor = '#F1FAEE';
+      infoCardBody.style.height = '32.5rem';
       infoCard.appendChild(infoCardBody);
 
       let infoCardTitle = document.createElement('h1');
       infoCardTitle.classList.add('card-title');
       infoCardTitle.style.textAlign = 'center';
       infoCardBody.appendChild(infoCardTitle);
-      let infoCardTitleNode = document.createTextNode('Information');
+      let infoCardTitleNode = document.createTextNode('Pokédex Data');
       infoCardTitle.appendChild(infoCardTitleNode);
 
       let lineBreak = document.createElement('hr');
@@ -99,18 +101,46 @@ function search(query, content) {
 
       let infoCardPre = document.createElement('pre');
       infoCardPre.classList.add('card-text');
+      infoCardPre.style.margin = '0';
       let infoCardTextNode = document.createTextNode(
         'type: ' + data.types[0].type.name + '\n' +
         'height: ' + data.height * 10 + 'cm' + '\n' +
         'weight: ' + data.weight / 10 + 'kg' + '\n\n' +
         'favourite move: ' + favMove + '\n' +
         'least favourite move: ' + leastFavMove +
-        '\n\n'
+        '\n\n' +
+        'can be found in: '
         );
       infoCardPre.appendChild(infoCardTextNode);
+
       let infoCardParagraph = document.createElement('p');
       infoCardParagraph.appendChild(infoCardPre);
       infoCardBody.appendChild(infoCardParagraph);
+
+      let gameTable = document.createElement('table');
+      let gameList1 = document.createElement('tr');
+      let gameList2 = document.createElement('tr');
+
+      for(let i = 0; i <= 9; i++) {
+
+        let gameList1td = document.createElement('td');
+        let gameList1tdNode = document.createTextNode(data.game_indices[i].version.name.replace('-', ' '));
+        gameList1td.appendChild(gameList1tdNode);
+        gameList1.appendChild(gameList1td);
+        gameTable.appendChild(gameList1);
+        infoCardParagraph.appendChild(gameTable);
+      }
+
+      for(let i = 10; i < data.game_indices.length; i++) {
+
+        let gameList2td = document.createElement('td');
+        let gameList2tdNode = document.createTextNode(data.game_indices[i].version.name.replace('-', ' '));
+
+        gameList2td.appendChild(gameList2tdNode);
+        gameList2.appendChild(gameList2td);
+        gameTable.appendChild(gameList2);
+        infoCardPre.appendChild(gameTable);
+      }
   }).catch((error) => {
 
     console.log(error);
@@ -121,6 +151,7 @@ function felmeddelande(query) {
 
   let felCard = document.createElement('div');
   felCard.style.width = '25rem';
+  felCard.style.height = '35rem';
   felCard.classList.add('card');
   content.appendChild(felCard);
 
@@ -137,7 +168,7 @@ function felmeddelande(query) {
 
   let felCardTitle = document.createElement('h5');
   felCardTitle.classList.add('card-title');
-  let felCardTitleNode = document.createTextNode(`wops! "${query}"` + ' finns ej i databasen: vänligen sök igen.');
+  let felCardTitleNode = document.createTextNode(`wooops! "${query}"` + ' finns ej i databasen: vänligen sök igen.');
   felCardTitle.style.textAlign = 'center';
   felCardTitle.appendChild(felCardTitleNode);
   felCardBody.appendChild(felCardTitle);
