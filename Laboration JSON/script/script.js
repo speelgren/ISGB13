@@ -1,3 +1,5 @@
+/* ISGB13 */
+
 /*
  * https://pokeapi.co/api/v2/pokemon/
  * https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557
@@ -8,6 +10,8 @@
 window.addEventListener('load', init);
 document.querySelector('.navbar-brand').addEventListener('click', function() {
 
+  /* För att sidan ska laddas om helt och hållet
+   * när man klickar på "ISGB13 API" i navbar. */
   location.reload();
 });
 
@@ -15,6 +19,7 @@ function init() {
 
   document.querySelector('#form').addEventListener('submit', handleSubmit);
   document.querySelector('#content').classList.add('d-flex', 'flex-wrap', 'justify-content-center');
+  //document.querySelectorAll('body').classList.add('bg-light');
 }
 
 function handleSubmit(e) {
@@ -23,18 +28,27 @@ function handleSubmit(e) {
   let searchValue = document.querySelector('#search').value;
   document.querySelector('#content').innerHTML = null;
 
+  /* .toLowerCase() för att API:et behöver att sökningen är i gemener
+   * för att sökningen ska fungera korrekt. */
   search(searchValue.toLowerCase(), document.querySelector('#content'));
 }
 
 function search(query, content) {
 
-  window.fetch('https://pokeapi.co/api/v2/pokemon/' + encodeURIComponent(query)).then(function(response) {
+  window.fetch('https://pokeapi.co/api/v2/pokemon/' + encodeURIComponent(query.replace(' ', '-'))).then(function(response) {
 
+    /* .replace(' ', '-') på query används för att
+     * t.ex. en sökning på "tapu lele" ska omvandlas
+     * till "tapu-lele", så att sökningen går igenom. */
+
+    /* Om sökningen är tom händer inget och .card döljs.
+     * Behöver hitta varför detta kommer upp från första början. */
     if(query == '') {
 
       document.querySelector('.card').classList.add('d-none');
     }
 
+    /* Om response är annat än OK (t.ex. 404) skapas ett felmeddelande. */
     if(!response.ok) {
 
       felmeddelande(query);
@@ -46,17 +60,18 @@ function search(query, content) {
     }
   }).then(function(data) {
 
-      //Image card
+      /* Skapar ett bildkort med bild på den pokemon man sökt efter,
+       * med namn och id-nummer */
       let card = document.createElement('div');
       card.style.width = '25rem';
-      card.style.height = '32rem';
+      //card.style.height = '32rem';
       card.classList.add('card');
       content.appendChild(card);
 
       let cardImage = document.createElement('img');
       cardImage.classList.add('card-image-top');
       cardImage.src = data.sprites.other['official-artwork'].front_default;
-      cardImage.alt = data.species.name + ' pokemon';
+      cardImage.alt = 'bild på ' + data.species.name + ' pokemon';
       cardImage.style.backgroundColor = '#A8DADC';
       card.appendChild(cardImage);
 
@@ -72,7 +87,7 @@ function search(query, content) {
       cardTitle.appendChild(cardTitleNode);
       cardBody.appendChild(cardTitle);
 
-      // Information card
+      /* Skapar ett infokort med information om den pokemon man sökt efter */
       let infoCard = document.createElement('div');
       infoCard.style.width = '25rem';
       infoCard.classList.add('card');
@@ -81,7 +96,7 @@ function search(query, content) {
       let infoCardBody = document.createElement('div');
       infoCardBody.classList.add('card-body');
       infoCardBody.style.backgroundColor = '#F1FAEE';
-      infoCardBody.style.height = '30rem';
+      //infoCardBody.style.height = '30rem';
       infoCard.appendChild(infoCardBody);
 
       let infoCardTitle = document.createElement('h1');
@@ -91,9 +106,11 @@ function search(query, content) {
       let infoCardTitleNode = document.createTextNode('Pokédex Data');
       infoCardTitle.appendChild(infoCardTitleNode);
 
+      /* Linebreak för att skilja mellan infoCard's title och texten. */
       let lineBreak = document.createElement('hr');
       infoCardTitle.appendChild(lineBreak);
 
+      /* Används för att ge favMove och leastFavMove ett random index. */
       let i = Math.floor(Math.random() * data.moves.length);
       let j = Math.floor(Math.random() * data.moves.length);
       let favMove = data.moves[i].move.name;
@@ -108,70 +125,85 @@ function search(query, content) {
         'weight: ' + data.weight / 10 + 'kg' + '\n\n' +
         'favourite move: ' + favMove + '\n' +
         'least favourite move: ' + leastFavMove +
-        '\n\n' +
-        'can be found in: '
-        );
+        '\n\n');
       infoCardPre.appendChild(infoCardTextNode);
 
       let infoCardParagraph = document.createElement('p');
       infoCardParagraph.appendChild(infoCardPre);
       infoCardBody.appendChild(infoCardParagraph);
 
-      let gameTable = document.createElement('table');
-      let gameList1 = document.createElement('tr');
-      let gameList2 = document.createElement('tr');
+      if(data.game_indices.length > 1) {
 
-      for(let i = 0; i <= 9; i++) {
+        /* Skapar en table för att lägga in spelen varje pokemon kan hittas i.
+         * Två for-loopar för att dela upp så att listan inte blir för lång.
+         * Listan blir 10*2 */
+        let infoCardFoundIn = document.createTextNode('can be found in: ');
+        infoCardPre.appendChild(infoCardFoundIn);
 
-        let gameList1td = document.createElement('td');
-        let gameList1tdNode = document.createTextNode(data.game_indices[i].version.name.replace('-', ' '));
-        gameList1td.appendChild(gameList1tdNode);
-        gameList1.appendChild(gameList1td);
-        gameTable.appendChild(gameList1);
-        infoCardParagraph.appendChild(gameTable);
+        let gameTable = document.createElement('table');
+        let gameList1 = document.createElement('tr');
+        let gameList2 = document.createElement('tr');
+
+        for(let i = 0; i <= 9; i++) {
+
+          let gameList1td = document.createElement('td');
+          let gameList1tdNode = document.createTextNode('pokemon ' + data.game_indices[i].version.name.replace('-', ' '));
+          gameList1td.appendChild(gameList1tdNode);
+          gameList1.appendChild(gameList1td);
+          gameTable.appendChild(gameList1);
+          infoCardParagraph.appendChild(gameTable);
+        }
+
+        for(let i = 10; i < data.game_indices.length; i++) {
+
+          let gameList2td = document.createElement('td');
+          let gameList2tdNode = document.createTextNode('pokemon ' + data.game_indices[i].version.name.replace('-', ' '));
+          gameList2td.appendChild(gameList2tdNode);
+          gameList2.appendChild(gameList2td);
+          gameTable.appendChild(gameList2);
+          infoCardParagraph.appendChild(gameTable);
+        }
+      } else {
+
+        let infoCardNotFoundIn = document.createTextNode(`can't be found in-game.`);
+        infoCardPre.appendChild(infoCardNotFoundIn);
       }
-
-      for(let i = 10; i < data.game_indices.length; i++) {
-
-        let gameList2td = document.createElement('td');
-        let gameList2tdNode = document.createTextNode(data.game_indices[i].version.name.replace('-', ' '));
-
-        gameList2td.appendChild(gameList2tdNode);
-        gameList2.appendChild(gameList2td);
-        gameTable.appendChild(gameList2);
-        infoCardPre.appendChild(gameTable);
-      }
-  }).catch((error) => {
+  }).catch(function(error) {
 
     console.log(error);
   });
 }
 
+/* Skapar ett felmeddelande om man söker efter en pokemon som inte finns i API:et */
+
 function felmeddelande(query) {
 
   let felCard = document.createElement('div');
   felCard.style.width = '25rem';
-  felCard.style.height = '35rem';
   felCard.classList.add('card');
+  felCard.classList.add('bg-danger');
   content.appendChild(felCard);
 
   let felCardImage = document.createElement('img');
   felCardImage.classList.add('card-image-top');
   felCardImage.src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/132.png';
-  felCardImage.style.backgroundColor = '#A8DADC';
+  felCardImage.alt = 'bild på ditto pokemon';
   felCard.appendChild(felCardImage);
 
   let felCardBody = document.createElement('div');
   felCardBody.classList.add('card-body');
-  felCardBody.style.backgroundColor = '#A8DADC';
   felCard.appendChild(felCardBody);
 
   let felCardTitle = document.createElement('h5');
   felCardTitle.classList.add('card-title');
-  let felCardTitleNode = document.createTextNode(`wooops! "${query}"` + ' finns ej i databasen: vänligen sök igen.');
+  let felCardTitleNode = document.createTextNode(`ditto hittade inte "${query}"` + ' i databasen. försök igen!');
   felCardTitle.style.textAlign = 'center';
   felCardTitle.appendChild(felCardTitleNode);
   felCardBody.appendChild(felCardTitle);
+
+/* Använder detta för att dölja ett .card
+ * som kommer upp när man söker efter något som inte finns.
+ * Behöver hitta varför detta kommer upp från första början. */
 
   document.querySelector('.card')[1].classList.add('d-none');
 }

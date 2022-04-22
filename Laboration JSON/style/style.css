@@ -1,6 +1,8 @@
+/* ISGB13 */
+
 body {
 
-  background-color: #f8f8ff;
+  background-color: #f8f9fa;
   font-family: monospace;
 }
 .card {
@@ -13,10 +15,9 @@ body {
 
   height: 25px;
 }
-/*
- * Hjälp med uppdelningen av table från stackoverflow:
+/* Hjälp med uppdelningen av table från stackoverflow:
  * https://stackoverflow.com/questions/48328514/how-to-display-table-in-two-columns
-*/
+ */
 table, tr, td {
 
   display: block !important;
@@ -25,15 +26,4 @@ tr {
 
   float: left !important;
   width: 50% !important;
-}
-
-/*
- * För att table inte ska spilla över infoCard's bound..
-*/
-
-@media screen and (max-width: 839px) {
-
-  .card {
-    height: 35rem;
-  }
 }
