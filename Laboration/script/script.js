@@ -49,7 +49,7 @@ function search(query, content) {
       //Image card
       let card = document.createElement('div');
       card.style.width = '25rem';
-      card.style.height = '35rem';
+      card.style.height = '32rem';
       card.classList.add('card');
       content.appendChild(card);
 
@@ -81,7 +81,7 @@ function search(query, content) {
       let infoCardBody = document.createElement('div');
       infoCardBody.classList.add('card-body');
       infoCardBody.style.backgroundColor = '#F1FAEE';
-      infoCardBody.style.height = '32.5rem';
+      infoCardBody.style.height = '30rem';
       infoCard.appendChild(infoCardBody);
 
       let infoCardTitle = document.createElement('h1');

@@ -1,0 +1,39 @@
+body {
+
+  background-color: #f8f8ff;
+  font-family: monospace;
+}
+.card {
+
+  margin: 0 5px 5px 0;
+  border: 1px solid #1D3557;
+  border-radius: 0;
+}
+#nav-img {
+
+  height: 25px;
+}
+/*
+ * Hjälp med uppdelningen av table från stackoverflow:
+ * https://stackoverflow.com/questions/48328514/how-to-display-table-in-two-columns
+*/
+table, tr, td {
+
+  display: block !important;
+}
+tr {
+
+  float: left !important;
+  width: 50% !important;
+}
+
+/*
+ * För att table inte ska spilla över infoCard's bound..
+*/
+
+@media screen and (max-width: 839px) {
+
+  .card {
+    height: 35rem;
+  }
+}
