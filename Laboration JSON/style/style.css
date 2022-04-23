@@ -5,6 +5,12 @@ body {
   background-color: #f8f9fa;
   font-family: monospace;
 }
+
+#myChart {
+  
+  width: 100%;
+  max-width: 600px;
+}
 .card {
 
   margin: 0 5px 5px 0;

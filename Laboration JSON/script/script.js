@@ -8,7 +8,7 @@
 'use strict';
 
 window.addEventListener('load', init);
-document.querySelector('.navbar-brand').addEventListener('click', function() {
+document.querySelector('.navbar-brand', '.nav-link').addEventListener('click', function() {
 
   /* För att sidan ska laddas om helt och hållet
    * när man klickar på "ISGB13 API" i navbar. */
@@ -17,12 +17,11 @@ document.querySelector('.navbar-brand').addEventListener('click', function() {
 
 function init() {
 
-  document.querySelector('#form').addEventListener('submit', handleSubmit);
+  document.querySelector('#form').addEventListener('submit', submitPokemon);
   document.querySelector('#content').classList.add('d-flex', 'flex-wrap', 'justify-content-center');
-  //document.querySelectorAll('body').classList.add('bg-light');
 }
 
-function handleSubmit(e) {
+function submitPokemon(e) {
 
   e.preventDefault();
   let searchValue = document.querySelector('#search').value;
@@ -30,10 +29,10 @@ function handleSubmit(e) {
 
   /* .toLowerCase() för att API:et behöver att sökningen är i gemener
    * för att sökningen ska fungera korrekt. */
-  search(searchValue.toLowerCase(), document.querySelector('#content'));
+  searchPokemon(searchValue.toLowerCase(), document.querySelector('#content'));
 }
 
-function search(query, content) {
+function searchPokemon(query, content) {
 
   window.fetch('https://pokeapi.co/api/v2/pokemon/' + encodeURIComponent(query.replace(' ', '-'))).then(function(response) {
 
@@ -64,7 +63,6 @@ function search(query, content) {
        * med namn och id-nummer */
       let card = document.createElement('div');
       card.style.width = '25rem';
-      //card.style.height = '32rem';
       card.classList.add('card');
       content.appendChild(card);
 
@@ -96,7 +94,6 @@ function search(query, content) {
       let infoCardBody = document.createElement('div');
       infoCardBody.classList.add('card-body');
       infoCardBody.style.backgroundColor = '#F1FAEE';
-      //infoCardBody.style.height = '30rem';
       infoCard.appendChild(infoCardBody);
 
       let infoCardTitle = document.createElement('h1');
@@ -134,7 +131,7 @@ function search(query, content) {
 
       if(data.game_indices.length > 1) {
 
-        /* Skapar en table för att lägga in spelen varje pokemon kan hittas i.
+        /* Skapar en table för att lägga in spelen karaktären kan hittas i.
          * Två for-loopar för att dela upp så att listan inte blir för lång.
          * Listan blir 10*2 */
         let infoCardFoundIn = document.createTextNode('can be found in: ');
