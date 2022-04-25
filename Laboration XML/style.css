@@ -1,0 +1,35 @@
+/* ISGB13 */
+
+body {
+
+  background-color: #f8f9fa;
+  font-family: monospace;
+}
+
+#myChart {
+
+  width: 100%;
+  max-width: 600px;
+}
+.card {
+
+  margin: 0 5px 5px 0;
+  border: 1px solid #1D3557;
+  border-radius: 0;
+}
+#nav-img {
+
+  height: 25px;
+}
+/* Hjälp med uppdelningen av table från stackoverflow:
+ * https://stackoverflow.com/questions/48328514/how-to-display-table-in-two-columns
+ */
+table, tr, td {
+
+  display: block !important;
+}
+tr {
+
+  float: left !important;
+  width: 50% !important;
+}
