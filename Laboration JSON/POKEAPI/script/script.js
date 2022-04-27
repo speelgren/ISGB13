@@ -89,6 +89,9 @@ function searchPokemon(query, content) {
 
       let cardImage = document.createElement('img');
       cardImage.classList.add('card-image-top');
+      /* För att få tillgång till bilden under "official-artwork.front_default"
+       * behövde jag använda "['official-artwork'].front_default".
+       * cardImage.src kan inte ha attribut med bindestreck. */
       cardImage.src = data.sprites.other['official-artwork'].front_default;
       cardImage.alt = 'bild på ' + data.species.name + ' pokemon';
       cardImage.style.backgroundColor = '#A8DADC';
