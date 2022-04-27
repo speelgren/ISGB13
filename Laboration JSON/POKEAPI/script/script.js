@@ -17,29 +17,16 @@ document.querySelector('.navbar-brand', '.nav-link').addEventListener('click', f
 
 function init() {
 
-  pokeGraph();
+  fetchAllPokemons();
   document.querySelector('#form').addEventListener('submit', submitPokemon);
   document.querySelector('#content').classList.add('d-flex', 'flex-wrap', 'justify-content-center');
 }
 
 /* Början på en graf.
  * Osäker på om det kommer göras klart. */
-function pokeGraph() {
-
-  window.fetch('https://pokeapi.co/api/v2/pokemon/?limit=1000').then(function(response) {
-
-    return response.json();
-  }).then(function(graphData) {
-
-    for(let i = 0; i < 1000; i++) {
-      let poke = graphData.results[i].url;
-    }
+function fetchAllPokemons() {
 
 
-  }).catch(function(error) {
-
-    console.log(error);
-  });
 }
 
 function submitPokemon(e) {

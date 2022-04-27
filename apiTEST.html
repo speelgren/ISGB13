@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>quote</title>
+    <style>
+      body {
+        font-family: monospace;
+      }
+    </style>
+    <script type="text/javascript">
+      window.addEventListener('load', init);
+
+      function init() {
+
+        window.fetch('https://the-dune-api.herokuapp.com/quotes/').then(function(response) {
+
+          return response.json();
+        }).then(function(data) {
+
+          let textElement = document.createElement('q');
+          let textNode = document.createTextNode(data[0].quote);
+          textElement.appendChild(textNode);
+          document.querySelector('.content').appendChild(textElement);
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <main>
+      <div class="content">
+
+      </div>
+    </main>
+  </body>
+</html>
