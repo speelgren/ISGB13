@@ -22,8 +22,6 @@ function init() {
   document.querySelector('#content').classList.add('d-flex', 'flex-wrap', 'justify-content-center');
 }
 
-/* Början på en graf.
- * Osäker på om det kommer göras klart. */
 function fetchAllPokemons() {
 
   /* Med lite inspiration från:
@@ -39,11 +37,11 @@ function fetchAllPokemons() {
   Promise.all(allPromises)
   .then(function(data) {
 
-    /* Hämtar ut det sista resultatet ur data
+    /* Hämtar ut det sista resultatet (vektorn) ur data
      * och sparar det i variabeln pokeData */
     let pokeData = data.pop();
     let collageContent = document.querySelector('#fetchContent');
-    collageContent.classList.add('d-flex', 'flex-wrap', 'justify-content-center')
+    collageContent.classList.add('d-flex', 'flex-wrap', 'justify-content-center');
 
     let cardCollage = document.createElement('div');
     cardCollage.classList.add('card', 'cardCollage');
@@ -239,17 +237,12 @@ function searchPokemon(query) {
         movesetBody.appendChild(moveTable);
       }
 
-      /* Används för att ge favMove och leastFavMove ett random index.
-       * let i = Math.floor(Math.random() * data.moves.length);
-       * let j = Math.floor(Math.random() * data.moves.length);
-       * let favMove = data.moves[i].move.name;
-       * let leastFavMove = data.moves[j].move.name;
-       */
-
       let infoCardPre = document.createElement('pre');
       infoCardPre.classList.add('card-text');
       infoCardPre.style.margin = '0';
       let infoCardTextNode = document.createTextNode(
+        'base experience: ' + data.base_experience + '\n' +
+        'base hp: ' + data.stats[0].base_stat + '\n' +
         'type: ' + data.types[0].type.name + '\n' +
         'height: ' + data.height * 10 + 'cm' + '\n' +
         'weight: ' + data.weight / 10 + 'kg' + '\n\n'
