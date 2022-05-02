@@ -16,8 +16,6 @@ function searchValue(e) {
   search(searchValue.toLowerCase());
 }
 
-/* Ska skrivas om till XML. */
-
 function search(query) {
 
   window.fetch('http://www.omdbapi.com/?apikey=ecb78f37&t=' + encodeURIComponent(query) + '&r=xml')
