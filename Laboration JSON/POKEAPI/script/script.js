@@ -27,7 +27,7 @@ function fetchAllPokemons() {
   /* Med lite inspiration från:
    * https://codepen.io/jamesqquick/pen/NWKaNQz */
   let allPromises = [];
-  for(let i = 1; i <= 898; i++) {
+  for(let i = 1; i <= 151; i++) {
 
     allPromises.push(fetch('https://pokeapi.co/api/v2/pokemon/' + i)
   .then(function(response) {
