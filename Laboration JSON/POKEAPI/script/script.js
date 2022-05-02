@@ -89,6 +89,10 @@ function searchPokemon(query, content) {
       cardBody.style.backgroundColor = '#A8DADC';
       card.appendChild(cardBody);
 
+      /* Linebreak för att skilja mellan bild och text. */
+      let cardImageLinebreak = document.createElement('hr');
+      cardBody.appendChild(cardImageLinebreak);
+
       let cardTitle = document.createElement('h4');
       cardTitle.classList.add('card-title');
       let cardTitleNode = document.createTextNode(data.name.toUpperCase()  + ' (' + data.id + ')');
@@ -115,14 +119,76 @@ function searchPokemon(query, content) {
       infoCardTitle.appendChild(infoCardTitleNode);
 
       /* Linebreak för att skilja mellan infoCard's title och texten. */
-      let lineBreak = document.createElement('hr');
-      infoCardTitle.appendChild(lineBreak);
+      let infoCardLinebreak = document.createElement('hr');
+      infoCardTitle.appendChild(infoCardLinebreak);
 
-      /* Används för att ge favMove och leastFavMove ett random index. */
-      let i = Math.floor(Math.random() * data.moves.length);
-      let j = Math.floor(Math.random() * data.moves.length);
-      let favMove = data.moves[i].move.name;
-      let leastFavMove = data.moves[j].move.name;
+      /* Skapar ett kort med information om moves */
+      let movesetCard = document.createElement('div');
+      movesetCard.style.width = '25rem';
+      movesetCard.classList.add('card');
+      content.appendChild(movesetCard);
+
+      let movesetBody = document.createElement('div');
+      movesetBody.classList.add('card-body');
+      movesetBody.style.backgroundColor = '#F1FAEE';
+      movesetCard.appendChild(movesetBody);
+
+      let movesetTitle = document.createElement('div');
+      movesetTitle.classList.add('card-title');
+      movesetTitle.style.textAlign = 'center';
+      movesetBody.appendChild(movesetTitle);
+      let moveSetTitleNode = document.createTextNode('Possible moveset');
+      movesetTitle.appendChild(moveSetTitleNode);
+
+      /* Linebreak för att skilja mellan moveset's title och text. */
+      let movesetLinebreak = document.createElement('hr');
+      movesetTitle.appendChild(movesetLinebreak);
+
+      let moveTable = document.createElement('table');
+      let moveList1 = document.createElement('tr');
+      moveList1.setAttribute('id', 'moveListTR');
+      let moveList2 = document.createElement('tr');
+      moveList2.setAttribute('id', 'moveListTR');
+      let moveList3 = document.createElement('tr');
+      moveList3.setAttribute('id', 'moveListTR');
+
+      for(let i = 0; i <= 14; i++) {
+
+        let moveListTD1 = document.createElement('td');
+        let moveListTD1Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
+        moveListTD1.appendChild(moveListTD1Node);
+        moveList1.appendChild(moveListTD1);
+        moveTable.appendChild(moveList1);
+        movesetBody.appendChild(moveTable);
+      }
+
+      for(let i = 15; i <= 30; i++) {
+
+        let moveListTD2 = document.createElement('td');
+        let moveListTD2Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
+        moveListTD2.appendChild(moveListTD2Node);
+        moveList2.appendChild(moveListTD2);
+        moveTable.appendChild(moveList2);
+        movesetBody.appendChild(moveTable);
+      }
+
+      for(let i = 31; i <= 46; i++) {
+
+        let moveListTD3 = document.createElement('td');
+        let moveListTD3Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
+        moveListTD3.appendChild(moveListTD3Node);
+        moveList3.appendChild(moveListTD3);
+        moveTable.appendChild(moveList3);
+        movesetBody.appendChild(moveTable);
+      }
+
+
+      /* Används för att ge favMove och leastFavMove ett random index.
+       * let i = Math.floor(Math.random() * data.moves.length);
+       * let j = Math.floor(Math.random() * data.moves.length);
+       * let favMove = data.moves[i].move.name;
+       * let leastFavMove = data.moves[j].move.name;
+       */
 
       let infoCardPre = document.createElement('pre');
       infoCardPre.classList.add('card-text');
@@ -130,10 +196,8 @@ function searchPokemon(query, content) {
       let infoCardTextNode = document.createTextNode(
         'type: ' + data.types[0].type.name + '\n' +
         'height: ' + data.height * 10 + 'cm' + '\n' +
-        'weight: ' + data.weight / 10 + 'kg' + '\n\n' +
-        'favourite move: ' + favMove + '\n' +
-        'least favourite move: ' + leastFavMove +
-        '\n\n');
+        'weight: ' + data.weight / 10 + 'kg' + '\n\n'
+      );
       infoCardPre.appendChild(infoCardTextNode);
 
       let infoCardParagraph = document.createElement('p');
@@ -150,7 +214,9 @@ function searchPokemon(query, content) {
 
         let gameTable = document.createElement('table');
         let gameList1 = document.createElement('tr');
+        gameList1.setAttribute('id', 'gameList');
         let gameList2 = document.createElement('tr');
+        gameList2.setAttribute('id', 'gameList');
 
         for(let i = 0; i <= 9; i++) {
 
@@ -175,6 +241,10 @@ function searchPokemon(query, content) {
 
         let infoCardNotFoundIn = document.createTextNode(`can't be found in-game.`);
         infoCardPre.appendChild(infoCardNotFoundIn);
+      }
+
+      for(let i = data.moves.length; i > 10; i--) {
+
       }
   }).catch(function(error) {
 

@@ -1,26 +1,32 @@
 /* ISGB13 */
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 body {
 
   background-color: #f8f9fa;
   font-family: monospace;
+  font-size: 100%;
 }
 
 #myChart {
-  
+
   width: 100%;
   max-width: 600px;
 }
+
 .card {
 
   margin: 0 5px 5px 0;
   border: 1px solid #1D3557;
   border-radius: 0;
 }
+
 #nav-img {
 
   height: 25px;
 }
+
 /* Hjälp med uppdelningen av table från stackoverflow:
  * https://stackoverflow.com/questions/48328514/how-to-display-table-in-two-columns
  */
@@ -28,8 +34,17 @@ table, tr, td {
 
   display: block !important;
 }
-tr {
+
+#gameList {
 
   float: left !important;
   width: 50% !important;
+}
+
+#moveListTR {
+
+  /* font-family: 'Roboto', sans-serif !important; */
+  font-size: 95% !important;
+  float: left !important;
+  width: 33% !important;
 }
