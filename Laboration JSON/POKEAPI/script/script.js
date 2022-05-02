@@ -27,7 +27,7 @@ function fetchAllPokemons() {
   /* Med lite inspiration från:
    * https://codepen.io/jamesqquick/pen/NWKaNQz */
   let allPromises = [];
-  for(let i = 1; i <= 151; i++) {
+  for(let i = 1; i <= 898; i++) {
 
     allPromises.push(fetch('https://pokeapi.co/api/v2/pokemon/' + i)
   .then(function(response) {
@@ -59,8 +59,8 @@ function fetchAllPokemons() {
     cardCollageBody.classList.add('card-body');
     cardCollage.appendChild(cardCollageBody);
 
-    let cardCollageTitle = document.createElement('h5');
-    cardCollageTitle.style.fontSize = '.75rem';
+    let cardCollageTitle = document.createElement('h6');
+    cardCollageTitle.style.fontSize = '0.75rem';
     cardCollageTitle.style.textAlign = 'center';
     cardCollageTitle.classList.add('card-title');
     let cardCollageTitleNode = document.createTextNode(pokeData.name.toUpperCase() + ' (' + pokeData.id + ') ');
@@ -107,12 +107,12 @@ function searchPokemon(query) {
       document.querySelector('.card').classList.add('d-none');
     }
 
-    /* Om response är annat än OK (t.ex. 404) skapas ett felmeddelande. */
+    /* Om response är annat än OK (t.ex. 404)
+     * skapas ett felmeddelande. */
     if(!response.ok) {
 
       felmeddelande(query);
-    }
-    else {
+    } else {
 
       return response.json();
     }
@@ -131,11 +131,12 @@ function searchPokemon(query) {
 
       let cardImage = document.createElement('img');
       cardImage.classList.add('card-image-top');
+
       /* För att få tillgång till bilden under "official-artwork.front_default"
        * behövde jag använda "['official-artwork'].front_default".
        * cardImage.src kan inte ha attribut med bindestreck. */
       cardImage.src = data.sprites.other['official-artwork'].front_default;
-      cardImage.alt = 'bild på ' + data.species.name + ' pokemon';
+      cardImage.alt = data.species.name;
       cardImage.style.backgroundColor = '#A8DADC';
       card.appendChild(cardImage);
 
@@ -310,7 +311,7 @@ function felmeddelande(query) {
   let felCardImage = document.createElement('img');
   felCardImage.classList.add('card-image-top');
   felCardImage.src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/132.png';
-  felCardImage.alt = 'bild på ditto pokemon';
+  felCardImage.alt = 'ditto';
   felCard.appendChild(felCardImage);
 
   let felCardBody = document.createElement('div');
