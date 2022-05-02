@@ -26,27 +26,58 @@ function init() {
  * Osäker på om det kommer göras klart. */
 function fetchAllPokemons() {
 
-  for(let i = 1; i < 150; i++) {
-  window.fetch('https://pokeapi.co/api/v2/pokemon/' + i)
+  /* Med lite inspiration från:
+   * https://codepen.io/jamesqquick/pen/NWKaNQz */
+  let allPromises = [];
+  for(let i = 1; i <= 898; i++) {
+
+    allPromises.push(fetch('https://pokeapi.co/api/v2/pokemon/' + i)
   .then(function(response) {
 
     return response.json();
-  })
-  .catch(function(error) {
-    
-    console.log(error);
-  })
+  }))
+  Promise.all(allPromises)
   .then(function(data) {
 
-    let kort = document.createElement('img');
-    kort.src = data.sprites.other['official-artwork'].front_default;
+    /* Hämtar ut det sista resultatet ur data
+     * och sparar det i variabeln pokeData */
+    let pokeData = data.pop();
+    let collageContent = document.querySelector('#fetchContent');
+    collageContent.classList.add('d-flex', 'flex-wrap', 'justify-content-center')
 
-    document.querySelector('#content').appendChild(kort);
+    let cardCollage = document.createElement('div');
+    cardCollage.classList.add('card', 'cardCollage');
+    cardCollage.style.width = '10rem';
+    cardCollage.style.height = '13rem';
+    cardCollage.style.backgroundColor = '#F8F9FA';
+    collageContent.appendChild(cardCollage);
+
+    let cardCollageImage = document.createElement('img');
+    cardCollageImage.src = pokeData.sprites.front_default;
+    cardCollageImage.alt = pokeData.species.name;
+    cardCollage.appendChild(cardCollageImage);
+
+    let cardCollageBody = document.createElement('div');
+    cardCollageBody.classList.add('card-body');
+    cardCollage.appendChild(cardCollageBody);
+
+    let cardCollageTitle = document.createElement('h5');
+    cardCollageTitle.style.fontSize = '.75rem';
+    cardCollageTitle.style.textAlign = 'center';
+    cardCollageTitle.classList.add('card-title');
+    let cardCollageTitleNode = document.createTextNode(pokeData.name.toUpperCase() + ' (' + pokeData.id + ') ');
+    cardCollageTitle.appendChild(cardCollageTitleNode);
+    cardCollageBody.appendChild(cardCollageTitle);
+
+    cardCollageImage.addEventListener('click', function(event) {
+
+      document.querySelector('#fetchContent').innerHTML = null;
+      searchPokemon(event.target.getAttribute('alt'));
+    })
   }).catch(function(error) {
 
     console.log(error);
-  });
-
+  })
   }
 }
 
@@ -55,13 +86,14 @@ function submitPokemon(e) {
   e.preventDefault();
   let searchValue = document.querySelector('#search').value;
   document.querySelector('#content').innerHTML = null;
+  document.querySelector('#fetchContent').innerHTML = null;
 
   /* .toLowerCase() för att API:et behöver att sökningen är i gemener
    * för att sökningen ska fungera korrekt. */
-  searchPokemon(searchValue.toLowerCase(), document.querySelector('#content'));
+  searchPokemon(searchValue.toLowerCase());
 }
 
-function searchPokemon(query, content) {
+function searchPokemon(query) {
 
   window.fetch('https://pokeapi.co/api/v2/pokemon/' + query.replace(' ', '-'))
   .then(function(response) {
@@ -88,6 +120,9 @@ function searchPokemon(query, content) {
     }
   })
   .then(function(data) {
+
+    document.querySelector('#fetchContent').classList.add('d-none');
+    let content = document.querySelector('#content');
 
       /* Skapar ett bildkort med bild på den pokemon man sökt efter,
        * med namn och id-nummer */
@@ -159,7 +194,7 @@ function searchPokemon(query, content) {
       movesetTitle.classList.add('card-title');
       movesetTitle.style.textAlign = 'center';
       movesetBody.appendChild(movesetTitle);
-      let moveSetTitleNode = document.createTextNode('Possible moveset');
+      let moveSetTitleNode = document.createTextNode('Possible moves');
       movesetTitle.appendChild(moveSetTitleNode);
 
       /* Linebreak för att skilja mellan moveset's title och text. */
@@ -299,5 +334,5 @@ function felmeddelande(query) {
   /* Använder detta för att dölja ett .card
    * som kommer upp när man söker efter något som inte finns.
    * Behöver hitta varför detta kommer upp från första början. */
-  document.querySelector('.card')[1].classList.add('d-none');
+  document.querySelector('.card')[0].classList.add('d-none');
 }

@@ -9,6 +9,11 @@ body {
   font-size: 100%;
 }
 
+.cardCollage:hover {
+
+  background-color: #A8DADC !important;
+}
+
 #myChart {
 
   width: 100%;
