@@ -26,7 +26,28 @@ function init() {
  * Osäker på om det kommer göras klart. */
 function fetchAllPokemons() {
 
+  for(let i = 1; i < 150; i++) {
+  window.fetch('https://pokeapi.co/api/v2/pokemon/' + i)
+  .then(function(response) {
 
+    return response.json();
+  })
+  .catch(function(error) {
+    
+    console.log(error);
+  })
+  .then(function(data) {
+
+    let kort = document.createElement('img');
+    kort.src = data.sprites.other['official-artwork'].front_default;
+
+    document.querySelector('#content').appendChild(kort);
+  }).catch(function(error) {
+
+    console.log(error);
+  });
+
+  }
 }
 
 function submitPokemon(e) {
@@ -42,7 +63,8 @@ function submitPokemon(e) {
 
 function searchPokemon(query, content) {
 
-  window.fetch('https://pokeapi.co/api/v2/pokemon/' + encodeURIComponent(query.replace(' ', '-'))).then(function(response) {
+  window.fetch('https://pokeapi.co/api/v2/pokemon/' + query.replace(' ', '-'))
+  .then(function(response) {
 
     /* .replace(' ', '-') på query används för att
      * t.ex. en sökning på "tapu lele" ska omvandlas
@@ -60,12 +82,12 @@ function searchPokemon(query, content) {
 
       felmeddelande(query);
     }
-
     else {
 
       return response.json();
     }
-  }).then(function(data) {
+  })
+  .then(function(data) {
 
       /* Skapar ett bildkort med bild på den pokemon man sökt efter,
        * med namn och id-nummer */
@@ -162,7 +184,7 @@ function searchPokemon(query, content) {
         movesetBody.appendChild(moveTable);
       }
 
-      for(let i = 15; i <= 30; i++) {
+      for(let i = 15; i <= 29; i++) {
 
         let moveListTD2 = document.createElement('td');
         let moveListTD2Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -172,7 +194,7 @@ function searchPokemon(query, content) {
         movesetBody.appendChild(moveTable);
       }
 
-      for(let i = 31; i <= 46; i++) {
+      for(let i = 30; i <= 44; i++) {
 
         let moveListTD3 = document.createElement('td');
         let moveListTD3Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -181,7 +203,6 @@ function searchPokemon(query, content) {
         moveTable.appendChild(moveList3);
         movesetBody.appendChild(moveTable);
       }
-
 
       /* Används för att ge favMove och leastFavMove ett random index.
        * let i = Math.floor(Math.random() * data.moves.length);
@@ -242,10 +263,6 @@ function searchPokemon(query, content) {
         let infoCardNotFoundIn = document.createTextNode(`can't be found in-game.`);
         infoCardPre.appendChild(infoCardNotFoundIn);
       }
-
-      for(let i = data.moves.length; i > 10; i--) {
-
-      }
   }).catch(function(error) {
 
     console.log(error);
@@ -279,9 +296,8 @@ function felmeddelande(query) {
   felCardTitle.appendChild(felCardTitleNode);
   felCardBody.appendChild(felCardTitle);
 
-/* Använder detta för att dölja ett .card
- * som kommer upp när man söker efter något som inte finns.
- * Behöver hitta varför detta kommer upp från första början. */
-
+  /* Använder detta för att dölja ett .card
+   * som kommer upp när man söker efter något som inte finns.
+   * Behöver hitta varför detta kommer upp från första början. */
   document.querySelector('.card')[1].classList.add('d-none');
 }
