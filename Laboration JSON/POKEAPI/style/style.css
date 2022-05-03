@@ -9,6 +9,11 @@ body {
   font-size: 100%;
 }
 
+#firstGen {
+
+  text-align: center;
+}
+
 .cardCollage {
 
   border-radius: 5px !important;

@@ -8,26 +8,33 @@
 'use strict';
 
 window.addEventListener('load', init);
-document.querySelector('.navbar-brand', '.nav-link').addEventListener('click', function() {
-
-  /* För att sidan ska laddas om helt och hållet
-   * när man klickar på "ISGB13 API" i navbar. */
-  location.reload();
-});
 
 function init() {
 
   fetchAllPokemons();
   document.querySelector('#form').addEventListener('submit', submitPokemon);
+  document.querySelector('.btn').addEventListener('click', () => {
+
+    /* Visa h3-elementet "Första Generationen" */
+    document.querySelector('#firstGen').classList.remove('d-none');
+    /* Detta används för att dölja och sedan visa alla pokemons. */
+    document.querySelector('#fetchContent').classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
+    document.querySelector('#content').innerHTML = null;
+  });
   document.querySelector('#content').classList.add('d-flex', 'flex-wrap', 'justify-content-center');
 }
 
 function fetchAllPokemons() {
 
-  /* Med lite inspiration från:
+  /* Med lite inspiration ang. hur jag kan lösa Promise.all från:
    * https://codepen.io/jamesqquick/pen/NWKaNQz */
+
+  /* .push() används för att lägga till fetch-anropet-
+   * och then-funktionen (+ response.json();), i slutet
+   * av allPromises-vektorn. Promise.all(allPromises)
+   * för att begära promise-objekt för alla anrop till API:et */
   let allPromises = [];
-  for(let i = 1; i <= 898; i++) {
+  for(let i = 1; i <= 151; i++) {
 
     allPromises.push(fetch('https://pokeapi.co/api/v2/pokemon/' + i)
   .then(function(response) {
@@ -37,8 +44,12 @@ function fetchAllPokemons() {
   Promise.all(allPromises)
   .then(function(data) {
 
-    /* Hämtar ut det sista resultatet (vektorn) ur data
-     * och sparar det i variabeln pokeData */
+    /* All data sparas i en vektor, från 1 till 898
+     * (med 898 svar från API:et).
+     * Använder .pop(); för att hämta ut det sita resultatet
+     * i data och sparar det i variabeln pokeData.
+     * Får på så sätt tillgång till alla pokemons
+     * och presentera dem i ett slags "kollage". */
     let pokeData = data.pop();
     let collageContent = document.querySelector('#fetchContent');
     collageContent.classList.add('d-flex', 'flex-wrap', 'justify-content-center');
@@ -67,15 +78,38 @@ function fetchAllPokemons() {
     cardCollageTitle.appendChild(cardCollageTitleNode);
     cardCollageBody.appendChild(cardCollageTitle);
 
+    /* Lägg till hover-metod på bild så att bilden ändras till shiny-versionen. */
+    cardCollageImage.addEventListener('mouseover', function() {
+
+      if(pokeData.sprites.front_shiny !== null) {
+
+        cardCollageImage.src = pokeData.sprites.front_shiny;
+      }
+    });
+
+    /* EventListener för att ändra tillbaka till icke-shiny
+     * version när användaren tar bort musen från bilden. */
+    cardCollageImage.addEventListener('mouseout', function() {
+
+      if(cardCollageImage.src = pokeData.sprites.front_shiny) {
+
+        cardCollageImage.src = pokeData.sprites.front_default;
+      }
+    });
+
     cardCollageImage.addEventListener('click', function(event) {
 
-      document.querySelector('#fetchContent').innerHTML = null;
+      /* När användaren klickar på en pokemon-bild så ska
+       * allt på sidan döljas för att få fram searchPokemon()-resultatet,
+       * dvs. mer specifik information om den pokemon
+       * användaren har klickat på. */
+      document.querySelector('#fetchContent').className = 'd-none';
       searchPokemon(event.target.getAttribute('alt'));
     })
-  }).catch(function(error) {
+    }).catch(function(error) {
 
-    console.log(error);
-  })
+      console.log(error);
+    })
   }
 }
 
@@ -84,7 +118,6 @@ function submitPokemon(e) {
   e.preventDefault();
   let searchValue = document.querySelector('#search').value;
   document.querySelector('#content').innerHTML = null;
-  document.querySelector('#fetchContent').innerHTML = null;
 
   /* .toLowerCase() för att API:et behöver att sökningen är i gemener
    * för att sökningen ska fungera korrekt. */
@@ -104,7 +137,7 @@ function searchPokemon(query) {
      * Behöver hitta varför detta kommer upp från första början. */
     if(query == '') {
 
-      document.querySelector('.card').classList.add('d-none');
+      document.querySelector('.card')[0].classList.add('d-none');
     }
 
     /* Om response är annat än OK (t.ex. 404)
@@ -119,7 +152,9 @@ function searchPokemon(query) {
   })
   .then(function(data) {
 
-    document.querySelector('#fetchContent').classList.add('d-none');
+    /* Dölj h3-elementet "Första Generationen" */
+    document.querySelector('#firstGen').classList.add('d-none');
+    document.querySelector('#fetchContent').className = 'd-none';
     let content = document.querySelector('#content');
 
       /* Skapar ett bildkort med bild på den pokemon man sökt efter,
@@ -178,6 +213,24 @@ function searchPokemon(query) {
       let infoCardLinebreak = document.createElement('hr');
       infoCardTitle.appendChild(infoCardLinebreak);
 
+      let infoCardPre = document.createElement('pre');
+      infoCardPre.classList.add('card-text');
+      infoCardPre.style.margin = '0';
+      let infoCardTextNode = document.createTextNode(
+        'type: ' + data.types[0].type.name + '\n' +
+        'base xp: ' + data.base_experience + '\n' +
+        'base hp: ' + data.stats[0].base_stat + '\n' +
+        'abilities: ' + data.abilities[0].ability.name +
+        ' & ' + data.abilities[1].ability.name + '\n' +
+        'height: ' + data.height * 10 + 'cm' + '\n' +
+        'weight: ' + data.weight / 10 + 'kg' + '\n\n'
+      );
+      infoCardPre.appendChild(infoCardTextNode);
+
+      let infoCardParagraph = document.createElement('p');
+      infoCardParagraph.appendChild(infoCardPre);
+      infoCardBody.appendChild(infoCardParagraph);
+
       /* Skapar ett kort med information om moves */
       let movesetCard = document.createElement('div');
       movesetCard.style.width = '25rem';
@@ -208,7 +261,9 @@ function searchPokemon(query) {
       let moveList3 = document.createElement('tr');
       moveList3.setAttribute('id', 'moveListTR');
 
-      for(let i = 0; i <= 14; i++) {
+      /* Antalet moves är helt arbitrary.
+       * Har valt det som ser "bäst" ut. */
+      for(let i = 0; i <= 18; i++) {
 
         let moveListTD1 = document.createElement('td');
         let moveListTD1Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -218,7 +273,7 @@ function searchPokemon(query) {
         movesetBody.appendChild(moveTable);
       }
 
-      for(let i = 15; i <= 29; i++) {
+      for(let i = 19; i <= 37; i++) {
 
         let moveListTD2 = document.createElement('td');
         let moveListTD2Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -228,7 +283,7 @@ function searchPokemon(query) {
         movesetBody.appendChild(moveTable);
       }
 
-      for(let i = 30; i <= 44; i++) {
+      for(let i = 38; i <= 56; i++) {
 
         let moveListTD3 = document.createElement('td');
         let moveListTD3Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -236,23 +291,7 @@ function searchPokemon(query) {
         moveList3.appendChild(moveListTD3);
         moveTable.appendChild(moveList3);
         movesetBody.appendChild(moveTable);
-      }
-
-      let infoCardPre = document.createElement('pre');
-      infoCardPre.classList.add('card-text');
-      infoCardPre.style.margin = '0';
-      let infoCardTextNode = document.createTextNode(
-        'base experience: ' + data.base_experience + '\n' +
-        'base hp: ' + data.stats[0].base_stat + '\n' +
-        'type: ' + data.types[0].type.name + '\n' +
-        'height: ' + data.height * 10 + 'cm' + '\n' +
-        'weight: ' + data.weight / 10 + 'kg' + '\n\n'
-      );
-      infoCardPre.appendChild(infoCardTextNode);
-
-      let infoCardParagraph = document.createElement('p');
-      infoCardParagraph.appendChild(infoCardPre);
-      infoCardBody.appendChild(infoCardParagraph);
+        }
 
       if(data.game_indices.length > 1) {
 
