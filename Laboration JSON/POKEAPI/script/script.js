@@ -79,7 +79,7 @@ function fetchAllPokemons() {
     cardCollageBody.appendChild(cardCollageTitle);
 
     /* Lägg till hover-metod på bild så att bilden ändras till shiny-versionen. */
-    cardCollageImage.addEventListener('mouseover', function() {
+    cardCollage.addEventListener('mouseover', function() {
 
       if(pokeData.sprites.front_shiny !== null) {
 
@@ -89,7 +89,7 @@ function fetchAllPokemons() {
 
     /* EventListener för att ändra tillbaka till icke-shiny
      * version när användaren tar bort musen från bilden. */
-    cardCollageImage.addEventListener('mouseout', function() {
+    cardCollage.addEventListener('mouseout', function() {
 
       if(cardCollageImage.src = pokeData.sprites.front_shiny) {
 
@@ -213,6 +213,8 @@ function searchPokemon(query) {
       let infoCardLinebreak = document.createElement('hr');
       infoCardTitle.appendChild(infoCardLinebreak);
 
+      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      /* Behöver göra individuell texstNode för varje stat. */
       let infoCardPre = document.createElement('pre');
       infoCardPre.classList.add('card-text');
       infoCardPre.style.margin = '0';
