@@ -15,9 +15,12 @@ function init() {
   document.querySelector('#form').addEventListener('submit', submitPokemon);
   document.querySelector('.btn').addEventListener('click', () => {
 
-    /* Visa h3-elementet "Första Generationen" */
+    /* Visa h3-elementet "First Generation" */
     document.querySelector('#firstGen').classList.remove('d-none');
-    /* Detta används för att dölja och sedan visa alla pokemons. */
+
+    /* Det nedan används för att dölja och sedan visa alla pokemons.
+     * Detta för att inte fetcha alla pokemons varje gång
+     * användaren klickar in på en specifik pokemon. */
     document.querySelector('#fetchContent').classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
     document.querySelector('#content').innerHTML = null;
   });
@@ -134,7 +137,7 @@ function searchPokemon(query) {
      * till "tapu-lele", så att sökningen går igenom. */
 
     /* Om sökningen är tom händer inget och .card döljs.
-     * Behöver hitta varför detta kommer upp från första början. */
+     * Behöver hitta varför .card kommer upp från första början. */
     if(query == '') {
 
       document.querySelector('.card')[0].classList.add('d-none');
@@ -152,7 +155,7 @@ function searchPokemon(query) {
   })
   .then(function(data) {
 
-    /* Dölj h3-elementet "Första Generationen" */
+    /* Dölj h3-elementet "First Generation" */
     document.querySelector('#firstGen').classList.add('d-none');
     document.querySelector('#fetchContent').className = 'd-none';
     let content = document.querySelector('#content');
@@ -213,21 +216,23 @@ function searchPokemon(query) {
       let infoCardLinebreak = document.createElement('hr');
       infoCardTitle.appendChild(infoCardLinebreak);
 
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      /* Behöver göra individuell texstNode för varje stat. */
       let infoCardPre = document.createElement('pre');
       infoCardPre.classList.add('card-text');
       infoCardPre.style.margin = '0';
-      let infoCardTextNode = document.createTextNode(
-        'type: ' + data.types[0].type.name + '\n' +
-        'base xp: ' + data.base_experience + '\n' +
-        'base hp: ' + data.stats[0].base_stat + '\n' +
-        'abilities: ' + data.abilities[0].ability.name +
-        ' & ' + data.abilities[1].ability.name + '\n' +
-        'height: ' + data.height * 10 + 'cm' + '\n' +
-        'weight: ' + data.weight / 10 + 'kg' + '\n\n'
-      );
-      infoCardPre.appendChild(infoCardTextNode);
+
+      let typeNode = document.createTextNode('type: ' + data.types[0].type.name + '\n');
+      let abilityNode = document.createTextNode('ability: ' + data.abilities[0].ability.name + '\n');
+      let baseXPNode = document.createTextNode('base xp: ' + data.base_experience + '\n');
+      let baseHPNode = document.createTextNode('base hp: ' + data.stats[0].base_stat + '\n');
+      let heightNode = document.createTextNode('height: ' + data.height * 10 + 'cm' + '\n');
+      let weightNode = document.createTextNode('weight: ' + data.weight / 10 + 'kg' + '\n\n');
+
+      infoCardPre.appendChild(typeNode);
+      infoCardPre.appendChild(abilityNode);
+      infoCardPre.appendChild(baseXPNode);
+      infoCardPre.appendChild(baseHPNode);
+      infoCardPre.appendChild(heightNode);
+      infoCardPre.appendChild(weightNode);
 
       let infoCardParagraph = document.createElement('p');
       infoCardParagraph.appendChild(infoCardPre);
@@ -264,8 +269,10 @@ function searchPokemon(query) {
       moveList3.setAttribute('id', 'moveListTR');
 
       /* Antalet moves är helt arbitrary.
-       * Har valt det som ser "bäst" ut. */
-      for(let i = 0; i <= 18; i++) {
+       * Har valt det som ser "bäst" ut.
+       * Får TypeError om en pokemon bara färre än 59 moves.
+       * Återkommer. Kanske. */
+      for(let i = 0; i <= 19; i++) {
 
         let moveListTD1 = document.createElement('td');
         let moveListTD1Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -275,7 +282,7 @@ function searchPokemon(query) {
         movesetBody.appendChild(moveTable);
       }
 
-      for(let i = 19; i <= 37; i++) {
+      for(let i = 20; i <= 39; i++) {
 
         let moveListTD2 = document.createElement('td');
         let moveListTD2Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -285,7 +292,7 @@ function searchPokemon(query) {
         movesetBody.appendChild(moveTable);
       }
 
-      for(let i = 38; i <= 56; i++) {
+      for(let i = 40; i <= 59; i++) {
 
         let moveListTD3 = document.createElement('td');
         let moveListTD3Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -295,7 +302,7 @@ function searchPokemon(query) {
         movesetBody.appendChild(moveTable);
         }
 
-      if(data.game_indices.length > 1) {
+      if(data.game_indices.length !== 0) {
 
         /* Skapar en table för att lägga in spelen karaktären kan hittas i.
          * Två for-loopar för att dela upp så att listan inte blir för lång.
@@ -309,6 +316,8 @@ function searchPokemon(query) {
         let gameList2 = document.createElement('tr');
         gameList2.setAttribute('id', 'gameList');
 
+        /* Får TypeError när en pokemon varit med i färre än 9 spel..
+         * Vet ej varför. Återkommer. (testat med en if-sats) */
         for(let i = 0; i <= 9; i++) {
 
           let gameList1td = document.createElement('td');
@@ -368,6 +377,6 @@ function felmeddelande(query) {
 
   /* Använder detta för att dölja ett .card
    * som kommer upp när man söker efter något som inte finns.
-   * Behöver hitta varför detta kommer upp från första början. */
+   * Behöver hitta varför .card kommer upp från första början. */
   document.querySelector('.card')[0].classList.add('d-none');
 }
