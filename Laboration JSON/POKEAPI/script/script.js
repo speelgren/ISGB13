@@ -12,18 +12,9 @@ window.addEventListener('load', init);
 function init() {
 
   fetchAllPokemons();
+  document.querySelector('.btn').addEventListener('click', hideAndClear);
   document.querySelector('#form').addEventListener('submit', submitPokemon);
-  document.querySelector('.btn').addEventListener('click', () => {
 
-    /* Visa h3-elementet "First Generation" */
-    document.querySelector('#firstGen').classList.remove('d-none');
-
-    /* Det nedan används för att dölja och sedan visa alla pokemons.
-     * Detta för att inte fetcha alla pokemons varje gång
-     * användaren klickar in på en specifik pokemon. */
-    document.querySelector('#fetchContent').classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
-    document.querySelector('#content').innerHTML = null;
-  });
   document.querySelector('#content').classList.add('d-flex', 'flex-wrap', 'justify-content-center');
 }
 
@@ -61,6 +52,7 @@ function fetchAllPokemons() {
     cardCollage.classList.add('card', 'cardCollage');
     cardCollage.style.width = '10rem';
     cardCollage.style.height = '13rem';
+    cardCollage.style.borderRadius = '5px';
     cardCollage.style.backgroundColor = '#F8F9FA';
     collageContent.appendChild(cardCollage);
 
@@ -77,7 +69,7 @@ function fetchAllPokemons() {
     cardCollageTitle.style.fontSize = '0.75rem';
     cardCollageTitle.style.textAlign = 'center';
     cardCollageTitle.classList.add('card-title');
-    let cardCollageTitleNode = document.createTextNode(pokeData.name.toUpperCase() + ' (' + pokeData.id + ') ');
+    let cardCollageTitleNode = document.createTextNode(pokeData.name.toUpperCase() + ' (' + pokeData.id + ')');
     cardCollageTitle.appendChild(cardCollageTitleNode);
     cardCollageBody.appendChild(cardCollageTitle);
 
@@ -87,6 +79,7 @@ function fetchAllPokemons() {
       if(pokeData.sprites.front_shiny !== null) {
 
         cardCollageImage.src = pokeData.sprites.front_shiny;
+        cardCollage.style.backgroundColor = '#A8DADC';
       }
     });
 
@@ -97,6 +90,7 @@ function fetchAllPokemons() {
       if(cardCollageImage.src = pokeData.sprites.front_shiny) {
 
         cardCollageImage.src = pokeData.sprites.front_default;
+        cardCollage.style.backgroundColor = '#F8F9FA';
       }
     });
 
@@ -156,7 +150,7 @@ function searchPokemon(query) {
   .then(function(data) {
 
     /* Dölj h3-elementet "First Generation" */
-    document.querySelector('#firstGen').classList.add('d-none');
+    document.querySelector('.firstGen').classList.add('d-none');
     document.querySelector('#fetchContent').className = 'd-none';
     let content = document.querySelector('#content');
 
@@ -272,7 +266,7 @@ function searchPokemon(query) {
 
       /* Antalet moves är helt arbitrary.
        * Har valt det som ser "bäst" ut.
-       * Får TypeError om en pokemon bara färre än 53 moves.
+       * Får TypeError om en pokemon har färre än 53 moves.
        * Återkommer. Kanske. */
       for(let i = 0; i <= 17; i++) {
 
@@ -348,6 +342,19 @@ function searchPokemon(query) {
 
     console.log(error);
   });
+}
+
+function hideAndClear() {
+
+  /* Visa h3-elementet "First Generation" */
+  document.querySelector('.firstGen').classList.remove('d-none');
+
+  /* Det nedan används för att dölja och sedan visa alla pokemons.
+   * Detta för att inte fetcha alla pokemons varje gång
+   * användaren klickar in på en specifik pokemon. */
+   document.querySelector('#fetchContent').classList.remove('d-none');
+  document.querySelector('#fetchContent').classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
+  document.querySelector('#content').innerHTML = null;
 }
 
 /* Skapar ett felmeddelande om man söker efter en pokemon som inte finns i API:et */
