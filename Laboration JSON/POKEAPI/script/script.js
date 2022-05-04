@@ -220,6 +220,8 @@ function searchPokemon(query) {
       infoCardPre.classList.add('card-text');
       infoCardPre.style.margin = '0';
 
+      /* Skapar textnoder för alla stats.
+       * append till pre för att kunna ha kvar radbrytningar. */
       let typeNode = document.createTextNode('type: ' + data.types[0].type.name + '\n');
       let abilityNode = document.createTextNode('ability: ' + data.abilities[0].ability.name + '\n');
       let baseXPNode = document.createTextNode('base xp: ' + data.base_experience + '\n');
@@ -270,9 +272,9 @@ function searchPokemon(query) {
 
       /* Antalet moves är helt arbitrary.
        * Har valt det som ser "bäst" ut.
-       * Får TypeError om en pokemon bara färre än 59 moves.
+       * Får TypeError om en pokemon bara färre än 53 moves.
        * Återkommer. Kanske. */
-      for(let i = 0; i <= 19; i++) {
+      for(let i = 0; i <= 17; i++) {
 
         let moveListTD1 = document.createElement('td');
         let moveListTD1Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -282,7 +284,7 @@ function searchPokemon(query) {
         movesetBody.appendChild(moveTable);
       }
 
-      for(let i = 20; i <= 39; i++) {
+      for(let i = 18; i <= 35; i++) {
 
         let moveListTD2 = document.createElement('td');
         let moveListTD2Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
@@ -292,7 +294,7 @@ function searchPokemon(query) {
         movesetBody.appendChild(moveTable);
       }
 
-      for(let i = 40; i <= 59; i++) {
+      for(let i = 36; i <= 53; i++) {
 
         let moveListTD3 = document.createElement('td');
         let moveListTD3Node = document.createTextNode(data.moves[i].move.name.replace('-', ' '));
