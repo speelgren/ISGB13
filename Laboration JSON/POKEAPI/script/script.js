@@ -1,10 +1,3 @@
-/* ISGB13 */
-
-/*
- * https://pokeapi.co/api/v2/pokemon/
- * https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557
-*/
-
 'use strict';
 
 window.addEventListener('load', init);
@@ -38,12 +31,12 @@ function fetchAllPokemons() {
   Promise.all(allPromises)
   .then(function(data) {
 
-    /* All data sparas i en vektor, från 1 till 898
-     * (med 898 svar från API:et).
+    /* All data sparas i en vektor, från 1 till 151.
      * Använder .pop(); för att hämta ut det sita resultatet
-     * i data och sparar det i variabeln pokeData.
+     * i data (vektorn med alla 151-index)
+     * och sparar det i variabeln pokeData.
      * Får på så sätt tillgång till alla pokemons
-     * och presentera dem i ett slags "kollage". */
+     * och kan presentera dem i ett slags "kollage". */
     let pokeData = data.pop();
     let collageContent = document.querySelector('#fetchContent');
     collageContent.classList.add('d-flex', 'flex-wrap', 'justify-content-center');
@@ -73,7 +66,8 @@ function fetchAllPokemons() {
     cardCollageTitle.appendChild(cardCollageTitleNode);
     cardCollageBody.appendChild(cardCollageTitle);
 
-    /* Lägg till hover-metod på bild så att bilden ändras till shiny-versionen. */
+    /* EventListener vid mouseover, "hover", över en pokemon
+     * för att ändra bakgrundfärg och bilden till shiny-versionen. */
     cardCollage.addEventListener('mouseover', function() {
 
       if(pokeData.sprites.front_shiny !== null) {
@@ -83,8 +77,8 @@ function fetchAllPokemons() {
       }
     });
 
-    /* EventListener för att ändra tillbaka till icke-shiny
-     * version när användaren tar bort musen från bilden. */
+    /* EventListener för att ändra tillbaka till original
+     * bakgrundfärg icke-shiny-version när användaren tar bort musen från bilden. */
     cardCollage.addEventListener('mouseout', function() {
 
       if(cardCollageImage.src = pokeData.sprites.front_shiny) {
@@ -99,7 +93,8 @@ function fetchAllPokemons() {
       /* När användaren klickar på en pokemon-bild så ska
        * allt på sidan döljas för att få fram searchPokemon()-resultatet,
        * dvs. mer specifik information om den pokemon
-       * användaren har klickat på. */
+       * användaren har klickat på.
+       * searchPokemon skickar alt-attributet från klick-eventet som parameter */
       document.querySelector('#fetchContent').className = 'd-none';
       searchPokemon(event.target.getAttribute('alt'));
     })
@@ -116,21 +111,20 @@ function submitPokemon(e) {
   let searchValue = document.querySelector('#search').value;
   document.querySelector('#content').innerHTML = null;
 
-  /* .toLowerCase() för att API:et behöver att sökningen är i gemener
+  /* .toLowerCase() eftersom API:et behöver att sökningen är i gemener
    * för att sökningen ska fungera korrekt. */
   searchPokemon(searchValue.toLowerCase());
 }
 
 function searchPokemon(query) {
 
+  /* .replace(' ', '-') på query används för att
+   * t.ex. en sökning på "tapu lele" ska omvandlas
+   * till "tapu-lele", så att sökningen går igenom. */
   window.fetch('https://pokeapi.co/api/v2/pokemon/' + query.replace(' ', '-'))
   .then(function(response) {
 
-    /* .replace(' ', '-') på query används för att
-     * t.ex. en sökning på "tapu lele" ska omvandlas
-     * till "tapu-lele", så att sökningen går igenom. */
-
-    /* Om sökningen är tom händer inget och .card döljs.
+    /* Om sökningen är tom händer inget och .card med index 0 döljs.
      * Behöver hitta varför .card kommer upp från första början. */
     if(query == '') {
 
@@ -190,8 +184,8 @@ function searchPokemon(query) {
 
       /* Skapar ett infokort med information om den pokemon man sökt efter */
       let infoCard = document.createElement('div');
-      infoCard.style.width = '25rem';
       infoCard.classList.add('card');
+      infoCard.style.width = '25rem';
       content.appendChild(infoCard);
 
       let infoCardBody = document.createElement('div');
