@@ -7,8 +7,6 @@ function init() {
   fetchAllPokemons();
   document.querySelector('.btn').addEventListener('click', hideAndClear);
   document.querySelector('#form').addEventListener('submit', submitPokemon);
-
-  document.querySelector('#content').classList.add('d-flex', 'flex-wrap', 'justify-content-center');
 }
 
 function fetchAllPokemons() {
@@ -77,8 +75,8 @@ function fetchAllPokemons() {
       }
     });
 
-    /* EventListener för att ändra tillbaka till original
-     * bakgrundfärg icke-shiny-version när användaren tar bort musen från bilden. */
+    /* EventListener för att ändra tillbaka till original-
+     * bakgrundfärg och bild när användaren tar bort musen från bilden. */
     cardCollage.addEventListener('mouseout', function() {
 
       if(cardCollageImage.src = pokeData.sprites.front_shiny) {
@@ -124,16 +122,9 @@ function searchPokemon(query) {
   window.fetch('https://pokeapi.co/api/v2/pokemon/' + query.replace(' ', '-'))
   .then(function(response) {
 
-    /* Om sökningen är tom händer inget och .card med index 0 döljs.
-     * Behöver hitta varför .card kommer upp från första början. */
-    if(query == '') {
-
-      document.querySelector('.card')[0].classList.add('d-none');
-    }
-
     /* Om response är annat än OK (t.ex. 404)
      * skapas ett felmeddelande. */
-    if(!response.ok) {
+    if(!response.ok || query == '') {
 
       felmeddelande(query);
     } else {
@@ -153,7 +144,7 @@ function searchPokemon(query) {
       let card = document.createElement('div');
       card.style.width = '25rem';
       card.classList.add('card');
-      content.appendChild(card);
+      //content.appendChild(card);
 
       let cardImage = document.createElement('img');
       cardImage.classList.add('card-image-top');
@@ -181,6 +172,8 @@ function searchPokemon(query) {
       cardTitle.style.textAlign = 'center';
       cardTitle.appendChild(cardTitleNode);
       cardBody.appendChild(cardTitle);
+
+      content.appendChild(card);
 
       /* Skapar ett infokort med information om den pokemon man sökt efter */
       let infoCard = document.createElement('div');
@@ -373,13 +366,18 @@ function felmeddelande(query) {
 
   let felCardTitle = document.createElement('h5');
   felCardTitle.classList.add('card-title');
-  let felCardTitleNode = document.createTextNode(`ditto hittade inte "${query}"` + ' i databasen. försök igen!');
-  felCardTitle.style.textAlign = 'center';
-  felCardTitle.appendChild(felCardTitleNode);
-  felCardBody.appendChild(felCardTitle);
 
-  /* Använder detta för att dölja ett .card
-   * som kommer upp när man söker efter något som inte finns.
-   * Behöver hitta varför .card kommer upp från första början. */
-  document.querySelector('.card')[0].classList.add('d-none');
+  if(query !== '') {
+
+    let felCardTitleNode = document.createTextNode(`ditto hittade inte "${query}"` + ' i databasen. försök igen!');
+    felCardTitle.style.textAlign = 'center';
+    felCardTitle.appendChild(felCardTitleNode);
+  } else {
+
+    let felCardTitleNode = document.createTextNode('ditto kan inte hitta en tom sökning i databasen. försök igen!');
+    felCardTitle.style.textAlign = 'center';
+    felCardTitle.appendChild(felCardTitleNode);
+  }
+
+  felCardBody.appendChild(felCardTitle);
 }
