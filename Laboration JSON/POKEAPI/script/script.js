@@ -41,6 +41,9 @@ function fetchAllPokemons() {
 
     let cardCollage = document.createElement('div');
     cardCollage.classList.add('card', 'cardCollage');
+    /* cardCollage.setAttribute('data-toggle', 'tooltop');
+    cardCollage.setAttribute('data-placement', 'top');
+    cardCollage.setAttribute('title', pokeData.species.name); */
     cardCollage.style.width = '10rem';
     cardCollage.style.height = '13rem';
     cardCollage.style.borderRadius = '5px';
@@ -50,6 +53,7 @@ function fetchAllPokemons() {
     let cardCollageImage = document.createElement('img');
     cardCollageImage.src = pokeData.sprites.front_default;
     cardCollageImage.alt = pokeData.species.name;
+    cardCollageImage.loading = 'lazy';
     cardCollage.appendChild(cardCollageImage);
 
     let cardCollageBody = document.createElement('div');
@@ -144,7 +148,6 @@ function searchPokemon(query) {
       let card = document.createElement('div');
       card.style.width = '25rem';
       card.classList.add('card');
-      //content.appendChild(card);
 
       let cardImage = document.createElement('img');
       cardImage.classList.add('card-image-top');
@@ -283,7 +286,7 @@ function searchPokemon(query) {
         moveList3.appendChild(moveListTD3);
         moveTable.appendChild(moveList3);
         movesetBody.appendChild(moveTable);
-        }
+      }
 
       if(data.game_indices.length !== 0) {
 
@@ -344,8 +347,8 @@ function hideAndClear() {
   document.querySelector('#content').innerHTML = null;
 }
 
-/* Skapar ett felmeddelande om man söker efter en pokemon som inte finns i API:et */
-
+/* Skapar ett felmeddelande om användaren söker efter
+ * en pokemon som inte finns i API:et */
 function felmeddelande(query) {
 
   let felCard = document.createElement('div');

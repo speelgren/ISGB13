@@ -1,12 +1,21 @@
 * {
 
-  font-family: monospace, serif;
+  font-family: monospace, sans-serif;
   font-size: 100%;
 }
 
 body  {
 
   background-color: #f8f9fa;
+  /* Gömmer scroll bar för Edge och Firefox  */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Gömmer scroll bar för Chrome och Safari */
+body::-webkit-scrollbar {
+
+  display: none;
 }
 
 .firstGen {
@@ -18,7 +27,7 @@ body  {
 
   margin-left: auto;
   margin-right: auto;
-  max-width: 1500px;
+  max-width: 1532px;
 }
 
 .card {
@@ -38,21 +47,23 @@ body  {
  */
 table, tr, td {
 
-  display: block !important;
+  display: block;
 }
 
 #gameList {
 
-  float: left !important;
-  width: 50% !important;
+  font-size: 85%;
+  float: left;
+  width: 50%;
 }
 
 #moveListTR {
 
-  font-size: 95% !important;
-  float: left !important;
-  width: 33% !important;
+  font-size: 85%;
+  float: left;
+  width: 33%;
 }
+
 
 @media screen and (max-width: 1532px) {
 
@@ -62,7 +73,7 @@ table, tr, td {
   }
 }
 
-@media screen and (max-width: 1099px) {
+@media screen and (max-width: 1100px) {
 
   #fetchContent {
 
