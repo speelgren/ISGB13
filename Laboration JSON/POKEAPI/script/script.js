@@ -39,7 +39,7 @@ function fetchAllPokemons() {
     let collageContent = document.querySelector('#fetchContent');
     collageContent.classList.add('d-flex', 'flex-wrap', 'justify-content-center');
 
-    let cardCollage = document.createElement('div');
+    let cardCollage = document.createElement('figure');
     cardCollage.classList.add('card', 'cardCollage');
     /* cardCollage.setAttribute('data-toggle', 'tooltop');
     cardCollage.setAttribute('data-placement', 'top');
@@ -56,7 +56,7 @@ function fetchAllPokemons() {
     cardCollageImage.loading = 'lazy';
     cardCollage.appendChild(cardCollageImage);
 
-    let cardCollageBody = document.createElement('div');
+    let cardCollageBody = document.createElement('figcaption');
     cardCollageBody.classList.add('card-body');
     cardCollage.appendChild(cardCollageBody);
 
@@ -145,7 +145,7 @@ function searchPokemon(query) {
 
       /* Skapar ett bildkort med bild på den pokemon man sökt efter,
        * med namn och id-nummer */
-      let card = document.createElement('div');
+      let card = document.createElement('figure');
       card.style.width = '25rem';
       card.classList.add('card');
 
@@ -160,7 +160,7 @@ function searchPokemon(query) {
       cardImage.style.backgroundColor = '#A8DADC';
       card.appendChild(cardImage);
 
-      let cardBody = document.createElement('div');
+      let cardBody = document.createElement('figcaption');
       cardBody.classList.add('card-body');
       cardBody.style.backgroundColor = '#A8DADC';
       card.appendChild(cardBody);
@@ -179,12 +179,12 @@ function searchPokemon(query) {
       content.appendChild(card);
 
       /* Skapar ett infokort med information om den pokemon man sökt efter */
-      let infoCard = document.createElement('div');
+      let infoCard = document.createElement('section');
       infoCard.classList.add('card');
       infoCard.style.width = '25rem';
       content.appendChild(infoCard);
 
-      let infoCardBody = document.createElement('div');
+      let infoCardBody = document.createElement('article');
       infoCardBody.classList.add('card-body');
       infoCardBody.style.backgroundColor = '#F1FAEE';
       infoCard.appendChild(infoCardBody);
@@ -225,17 +225,17 @@ function searchPokemon(query) {
       infoCardBody.appendChild(infoCardParagraph);
 
       /* Skapar ett kort med information om moves */
-      let movesetCard = document.createElement('div');
+      let movesetCard = document.createElement('section');
       movesetCard.style.width = '25rem';
       movesetCard.classList.add('card');
       content.appendChild(movesetCard);
 
-      let movesetBody = document.createElement('div');
+      let movesetBody = document.createElement('article');
       movesetBody.classList.add('card-body');
       movesetBody.style.backgroundColor = '#F1FAEE';
       movesetCard.appendChild(movesetBody);
 
-      let movesetTitle = document.createElement('div');
+      let movesetTitle = document.createElement('header');
       movesetTitle.classList.add('card-title');
       movesetTitle.style.textAlign = 'center';
       movesetBody.appendChild(movesetTitle);
@@ -351,7 +351,7 @@ function hideAndClear() {
  * en pokemon som inte finns i API:et */
 function felmeddelande(query) {
 
-  let felCard = document.createElement('div');
+  let felCard = document.createElement('figure');
   felCard.style.width = '25rem';
   felCard.classList.add('card');
   felCard.classList.add('bg-danger');
@@ -363,7 +363,7 @@ function felmeddelande(query) {
   felCardImage.alt = 'ditto';
   felCard.appendChild(felCardImage);
 
-  let felCardBody = document.createElement('div');
+  let felCardBody = document.createElement('figcaption');
   felCardBody.classList.add('card-body');
   felCard.appendChild(felCardBody);
 
