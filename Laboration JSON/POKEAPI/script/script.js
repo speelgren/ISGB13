@@ -8,7 +8,17 @@ window.addEventListener('load', () => {
   fetchAllPokemons(fetchContent);
 
   /* EventListener */
-  document.querySelector('#form').addEventListener('submit', submitPokemon);
+  document.querySelector('#form').addEventListener('submit', (event) => {
+
+    event.preventDefault();
+    let searchValue = document.querySelector('#search').value;
+    content.innerHTML = null;
+
+    /* .toLowerCase() eftersom API:et behöver att sökningen är i gemener
+   * för att sökningen ska fungera korrekt. */
+   searchPokemon(fetchContent, content, searchValue.toLowerCase());
+  });
+
   document.querySelector('.btn').addEventListener('click', () => {
 
     hideAndClear(fetchContent, content);
@@ -93,7 +103,7 @@ const fetchAllPokemons = (fetchContent) => {
      * bakgrundfärg och bild när användaren tar bort musen från bilden. */
     cardCollage.addEventListener('mouseout', () => {
 
-      if(cardCollageImage.src = pokeData.sprites.front_shiny) {
+      if(cardCollageImage.src == pokeData.sprites.front_shiny) {
 
         cardCollageImage.src = pokeData.sprites.front_default;
         cardCollage.style.backgroundColor = '#F8F9FA';
@@ -108,7 +118,7 @@ const fetchAllPokemons = (fetchContent) => {
        * användaren har klickat på.
        * searchPokemon skickar alt-attributet från klick-eventet som parameter */
       fetchContent.className = 'd-none';
-      searchPokemon(event.target.getAttribute('alt'));
+      searchPokemon(fetchContent, content, event.target.getAttribute('alt'));
     });
   }).catch( (error) => {
 
@@ -117,18 +127,7 @@ const fetchAllPokemons = (fetchContent) => {
   }
 }
 
-const submitPokemon = (event) => {
-
-  event.preventDefault();
-  let searchValue = document.querySelector('#search').value;
-  document.querySelector('#content').innerHTML = null;
-
-  /* .toLowerCase() eftersom API:et behöver att sökningen är i gemener
-   * för att sökningen ska fungera korrekt. */
-  searchPokemon(searchValue.toLowerCase());
-}
-
-const searchPokemon = (query) => {
+const searchPokemon = (fetchContent, content, query) => {
 
   /* .replace(' ', '-') på query används för att
    * t.ex. en sökning på "tapu lele" ska omvandlas
@@ -148,8 +147,7 @@ const searchPokemon = (query) => {
   })
   .then( (data) => {
 
-    document.querySelector('#fetchContent').className = 'd-none';
-    let content = document.querySelector('#content');
+    fetchContent.className = 'd-none';
 
     /* Skapar ett bildkort med bild på den pokemon man sökt efter,
      * med namn och id-nummer */
@@ -191,6 +189,8 @@ const searchPokemon = (query) => {
     let infoCard = document.createElement('section');
     infoCard.classList.add('card');
     infoCard.style.width = '25rem';
+    /* Append infoCard till content */
+    content.appendChild(infoCard);
 
     let infoCardBody = document.createElement('article');
     infoCardBody.classList.add('card-body');
@@ -260,9 +260,6 @@ const searchPokemon = (query) => {
       let infoCardNotFoundIn = document.createTextNode(`Can't be found in-game.`);
       infoCardPre.appendChild(infoCardNotFoundIn);
     }
-
-    /* Append infoCard till content */
-    content.appendChild(infoCard);
   }).catch( (error) => {
 
     console.log(error);
