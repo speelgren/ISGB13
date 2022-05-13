@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
   let content = document.querySelector('#content');
   fetchAllPokemons(fetchContent);
 
-  /* EventListener */
+  /** EventListener för submit / searchPokemon-funktion. **/
   document.querySelector('#form').addEventListener('submit', (event) => {
 
     event.preventDefault();
@@ -15,16 +15,22 @@ window.addEventListener('load', () => {
     content.innerHTML = null;
 
     /* .toLowerCase() eftersom API:et behöver att sökningen är i gemener
-   * för att sökningen ska fungera korrekt. */
-   searchPokemon(fetchContent, content, searchValue.toLowerCase());
+     * för att sökningen ska fungera korrekt. */
+    searchPokemon(fetchContent, content, searchValue.toLowerCase());
   });
 
+  /** EventListener för click / hideAndClear-funktion. **/
   document.querySelector('.btn').addEventListener('click', () => {
 
-    hideAndClear(fetchContent, content);
+    /* Det nedan används för att dölja och sedan visa alla pokemons.
+     * Detta för att inte fetcha alla pokemons varje gång
+     * användaren klickar in på en specifik pokemon. */
+    fetchContent.classList.remove('d-none');
+    fetchContent.classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
+    content.innerHTML = null;
   });
 
-  /* Timer för att inte visa information medans content laddar */
+  /** Timer för att inte visa information medans content laddar. **/
   let timeOut = setTimeout( () => {
 
     spinner.classList.add('d-none');
@@ -35,16 +41,14 @@ window.addEventListener('load', () => {
 
 const fetchAllPokemons = (fetchContent) => {
 
-  /* Med lite inspiration ang. hur jag kan lösa Promise.all från:
-   * https://codepen.io/jamesqquick/pen/NWKaNQz */
-
-  /* .push() används för att lägga till fetch-anropet-
-   * och then-funktionen (+ response.json();), i slutet
-   * av allPromises-vektorn. Promise.all(allPromises)
-   * för att begära promise-objekt för alla anrop till API:et */
+  /* Med lite inspiration ang. hur jag kan lösa Promise.all från: https://codepen.io/jamesqquick/pen/NWKaNQz */
   let allPromises = [];
   for(let i = 1; i <= 898; i++) {
 
+    /* .push() används för att lägga till fetch-anropet-
+     * och then-funktionen (+ response.json();), i slutet
+     * av allPromises-vektorn. Promise.all(allPromises)
+     * för att begära promise-objekt för alla anrop till API:et */
     allPromises.push(fetch('https://pokeapi.co/api/v2/pokemon/' + i)
   .then( (response) => {
 
@@ -61,59 +65,60 @@ const fetchAllPokemons = (fetchContent) => {
      * och kan presentera dem i ett slags "kollage". */
     let pokeData = data.pop();
 
-    let cardCollage = document.createElement('figure');
-    cardCollage.classList.add('card', 'cardCollage');
-    cardCollage.style.width = '10rem';
-    cardCollage.style.height = '13rem';
-    cardCollage.style.borderRadius = '5px';
-    cardCollage.style.backgroundColor = '#FFFFFC';
+    let cardFigure = document.createElement('figure');
+    cardFigure.classList.add('card');
+    cardFigure.style.width = '10rem';
+    cardFigure.style.height = '13rem';
+    cardFigure.style.borderRadius = '5px';
+    cardFigure.style.backgroundColor = '#FFFFFC';
 
-    fetchContent.appendChild(cardCollage);
+    fetchContent.appendChild(cardFigure);
 
-    let cardCollageImage = document.createElement('img');
-    cardCollageImage.src = pokeData.sprites.front_default;
-    cardCollageImage.alt = pokeData.species.name;
-    cardCollageImage.loading = 'lazy';
-    cardCollage.appendChild(cardCollageImage);
+    let cardFigureImage = document.createElement('img');
+    cardFigureImage.src = pokeData.sprites.front_default;
+    cardFigureImage.alt = pokeData.species.name;
+    cardFigureImage.loading = 'lazy';
+    cardFigure.appendChild(cardFigureImage);
 
-    let cardCollageBody = document.createElement('figcaption');
-    cardCollageBody.classList.add('card-body');
-    cardCollage.appendChild(cardCollageBody);
+    let cardFigureBody = document.createElement('figcaption');
+    cardFigureBody.classList.add('card-body');
+    cardFigureBody.style.paddingBottom = '0';
+    cardFigure.appendChild(cardFigureBody);
 
-    let cardCollageTitle = document.createElement('h6');
-    cardCollageTitle.classList.add('card-title');
-    cardCollageTitle.style.fontSize = '0.75rem';
-    cardCollageTitle.style.textAlign = 'center';
-    let cardCollageTitleNode = document.createTextNode(pokeData.name.toUpperCase() + ' #' + pokeData.id);
-    cardCollageTitle.appendChild(cardCollageTitleNode);
-    cardCollageBody.appendChild(cardCollageTitle);
+    let cardFigureTitle = document.createElement('h6');
+    cardFigureTitle.classList.add('card-title');
+    cardFigureTitle.style.fontSize = '0.85rem';
+    cardFigureTitle.style.textAlign = 'center';
+    let cardFigureTitleNode = document.createTextNode(pokeData.name.toUpperCase() + ' #' + pokeData.id);
+    cardFigureTitle.appendChild(cardFigureTitleNode);
+    cardFigureBody.appendChild(cardFigureTitle);
 
     /* EventListener vid mouseover, "hover", över en pokemon
      * för att ändra bakgrundfärg och bilden till shiny-versionen. */
-    cardCollage.addEventListener('mouseover', () => {
+    cardFigure.addEventListener('mouseover', () => {
 
       if(pokeData.sprites.front_shiny !== null) {
 
-        cardCollageImage.src = pokeData.sprites.front_shiny;
-        cardCollage.style.backgroundColor = '#A8DADC';
+        cardFigureImage.src = pokeData.sprites.front_shiny;
+        cardFigure.style.backgroundColor = '#A8DADC';
       }
     });
 
     /* EventListener för att ändra tillbaka till original-
      * bakgrundfärg och bild när användaren tar bort musen från bilden. */
-    cardCollage.addEventListener('mouseout', () => {
+    cardFigure.addEventListener('mouseout', () => {
 
-      if(cardCollageImage.src == pokeData.sprites.front_shiny) {
+      if(cardFigureImage.src == pokeData.sprites.front_shiny) {
 
-        cardCollageImage.src = pokeData.sprites.front_default;
-        cardCollage.style.backgroundColor = '#F8F9FA';
+        cardFigureImage.src = pokeData.sprites.front_default;
+        cardFigure.style.backgroundColor = '#F8F9FA';
       }
     });
 
-    cardCollageImage.addEventListener('click', (event) => {
+    cardFigureImage.addEventListener('click', (event) => {
 
       /* När användaren klickar på en pokemon-bild så ska
-       * allt på sidan döljas för att få fram searchPokemon()-resultatet,
+       * allt i #fetchContent döljas för att få fram searchPokemon()-resultatet,
        * dvs. mer specifik information om den pokemon
        * användaren har klickat på.
        * searchPokemon skickar alt-attributet från klick-eventet som parameter */
@@ -247,7 +252,7 @@ const searchPokemon = (fetchContent, content, query) => {
       data.game_indices.forEach( game => {
 
         let gameListTD = document.createElement('td');
-        let gameListTDNode = document.createTextNode('Pokemon: ' + game.version.name.replace('-', ' ').toUpperCase());
+        let gameListTDNode = document.createTextNode('Pokémon ' + game.version.name.replace('-', ' ').toUpperCase());
 
         gameListTD.appendChild(gameListTDNode);
         gameList.appendChild(gameListTD);
@@ -264,16 +269,6 @@ const searchPokemon = (fetchContent, content, query) => {
 
     console.log(error);
   });
-}
-
-const hideAndClear = (fetchContent, content) => {
-
-  /* Det nedan används för att dölja och sedan visa alla pokemons.
-   * Detta för att inte fetcha alla pokemons varje gång
-   * användaren klickar in på en specifik pokemon. */
-  fetchContent.classList.remove('d-none');
-  fetchContent.classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
-  content.innerHTML = null;
 }
 
 /* Skapar ett felmeddelande om användaren söker efter
