@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
   let content = document.querySelector('#content');
   fetchAllPokemons(fetchContent);
 
-  /** EventListener för submit / searchPokemon-funktion. **/
+  /* EventListener för submit / searchPokemon-funktion. */
   document.querySelector('#form').addEventListener('submit', (event) => {
 
     event.preventDefault();
@@ -16,10 +16,10 @@ window.addEventListener('load', () => {
 
     /* .toLowerCase() eftersom API:et behöver att sökningen är i gemener
      * för att sökningen ska fungera korrekt. */
-    searchPokemon(fetchContent, content, searchValue.toLowerCase());
+    searchPokemon(spinner, fetchContent, content, searchValue.toLowerCase());
   });
 
-  /** EventListener för click / hideAndClear-funktion. **/
+  /* EventListener för click / hideAndClear-funktion. */
   document.querySelector('.btn').addEventListener('click', () => {
 
     /* Det nedan används för att dölja och sedan visa alla pokemons.
@@ -30,12 +30,12 @@ window.addEventListener('load', () => {
     content.innerHTML = null;
   });
 
-  /** Timer för att inte visa information medans content laddar. **/
-  let timeOut = setTimeout( () => {
+  /* Timer medan fetchContent laddar. */
+  let fetchContentTO = setTimeout( () => {
 
     spinner.classList.add('d-none');
     fetchContent.classList.remove('d-none');
-    fetchContent.classList.add('d-flex', 'flex-wrap', 'justify-content-center');
+    fetchContent.classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
   }, 1500);
 });
 
@@ -43,115 +43,115 @@ const fetchAllPokemons = (fetchContent) => {
 
   /* Med lite inspiration ang. hur jag kan lösa Promise.all från: https://codepen.io/jamesqquick/pen/NWKaNQz */
   let allPromises = [];
-  for(let i = 1; i <= 898; i++) {
+  for(let i = 1; i <= 493; i++) {
 
     /* .push() används för att lägga till fetch-anropet-
      * och then-funktionen (+ response.json();), i slutet
      * av allPromises-vektorn. Promise.all(allPromises)
      * för att begära promise-objekt för alla anrop till API:et */
     allPromises.push(fetch('https://pokeapi.co/api/v2/pokemon/' + i)
-  .then( (response) => {
+    .then( response => { return response.json(); } )
+    )
+    Promise.all(allPromises)
+    .then( data => {
 
-    return response.json();
-  }))
-  Promise.all(allPromises)
-  .then( (data) => {
+      /* All data sparas i en vektor, från 1 till 493.
+       * Använder .pop(); för att hämta ut det sita resultatet
+       * i data (vektorn med alla 493-index)
+       * och sparar det i variabeln pokeData.
+       * Får på så sätt tillgång till alla pokemons
+       * och kan presentera dem i ett slags "kollage". */
+      let pokeData = data.pop();
 
-    /* All data sparas i en vektor, från 1 till 151.
-     * Använder .pop(); för att hämta ut det sita resultatet
-     * i data (vektorn med alla 898-index)
-     * och sparar det i variabeln pokeData.
-     * Får på så sätt tillgång till alla pokemons
-     * och kan presentera dem i ett slags "kollage". */
-    let pokeData = data.pop();
+      let cardFigure = document.createElement('figure');
+      cardFigure.classList.add('card');
+      cardFigure.style.width = '10rem';
+      cardFigure.style.height = '13.5rem';
+      cardFigure.style.borderRadius = '5px';
+      cardFigure.style.backgroundColor = '#FFFFFC';
 
-    let cardFigure = document.createElement('figure');
-    cardFigure.classList.add('card');
-    cardFigure.style.width = '10rem';
-    cardFigure.style.height = '13rem';
-    cardFigure.style.borderRadius = '5px';
-    cardFigure.style.backgroundColor = '#FFFFFC';
+      fetchContent.appendChild(cardFigure);
 
-    fetchContent.appendChild(cardFigure);
+      let cardFigureImage = document.createElement('img');
+      cardFigureImage.src = pokeData.sprites.front_default;
+      cardFigureImage.alt = pokeData.name;
+      cardFigureImage.loading = 'lazy';
+      cardFigure.appendChild(cardFigureImage);
 
-    let cardFigureImage = document.createElement('img');
-    cardFigureImage.src = pokeData.sprites.front_default;
-    cardFigureImage.alt = pokeData.species.name;
-    cardFigureImage.loading = 'lazy';
-    cardFigure.appendChild(cardFigureImage);
+      let cardFigureBody = document.createElement('figcaption');
+      cardFigureBody.classList.add('card-body');
+      cardFigureBody.style.paddingBottom = '0';
+      cardFigure.appendChild(cardFigureBody);
 
-    let cardFigureBody = document.createElement('figcaption');
-    cardFigureBody.classList.add('card-body');
-    cardFigureBody.style.paddingBottom = '0';
-    cardFigure.appendChild(cardFigureBody);
+      let cardFigureTitle = document.createElement('h6');
+      cardFigureTitle.classList.add('card-title');
+      cardFigureTitle.style.fontSize = '0.85rem';
+      cardFigureTitle.style.textAlign = 'center';
+      let cardFigureTitleNode = document.createTextNode(pokeData.name.toUpperCase() + ' #' + pokeData.id);
+      cardFigureTitle.appendChild(cardFigureTitleNode);
+      cardFigureBody.appendChild(cardFigureTitle);
 
-    let cardFigureTitle = document.createElement('h6');
-    cardFigureTitle.classList.add('card-title');
-    cardFigureTitle.style.fontSize = '0.85rem';
-    cardFigureTitle.style.textAlign = 'center';
-    let cardFigureTitleNode = document.createTextNode(pokeData.name.toUpperCase() + ' #' + pokeData.id);
-    cardFigureTitle.appendChild(cardFigureTitleNode);
-    cardFigureBody.appendChild(cardFigureTitle);
+      /* EventListener vid mouseover, "hover", över en pokemon
+       * för att ändra bakgrundfärg och bilden till shiny-versionen. */
+      cardFigure.addEventListener('mouseover', () => {
 
-    /* EventListener vid mouseover, "hover", över en pokemon
-     * för att ändra bakgrundfärg och bilden till shiny-versionen. */
-    cardFigure.addEventListener('mouseover', () => {
+        if(cardFigureImage.src !== pokeData.sprites.front_shiny) {
 
-      if(pokeData.sprites.front_shiny !== null) {
+          cardFigureImage.src = pokeData.sprites.front_shiny;
+          cardFigure.style.backgroundColor = '#EF476F';
+          cardFigureTitle.style.color = '#FFFFFC';
+        }
+      });
 
-        cardFigureImage.src = pokeData.sprites.front_shiny;
-        cardFigure.style.backgroundColor = '#A8DADC';
-      }
-    });
+      /* EventListener för att ändra tillbaka till original-
+       * bakgrundfärg och bild när användaren tar bort musen från bilden. */
+      cardFigure.addEventListener('mouseout', () => {
 
-    /* EventListener för att ändra tillbaka till original-
-     * bakgrundfärg och bild när användaren tar bort musen från bilden. */
-    cardFigure.addEventListener('mouseout', () => {
+        if(cardFigureImage.src == pokeData.sprites.front_shiny) {
 
-      if(cardFigureImage.src == pokeData.sprites.front_shiny) {
+          cardFigureImage.src = pokeData.sprites.front_default;
+          cardFigure.style.backgroundColor = '#FFFFFC';
+          cardFigureTitle.style.color = '#073B4C';
+        }
+      });
 
-        cardFigureImage.src = pokeData.sprites.front_default;
-        cardFigure.style.backgroundColor = '#F8F9FA';
-      }
-    });
+      cardFigureImage.addEventListener('click', (event) => {
 
-    cardFigureImage.addEventListener('click', (event) => {
-
-      /* När användaren klickar på en pokemon-bild så ska
-       * allt i #fetchContent döljas för att få fram searchPokemon()-resultatet,
-       * dvs. mer specifik information om den pokemon
-       * användaren har klickat på.
-       * searchPokemon skickar alt-attributet från klick-eventet som parameter */
-      fetchContent.className = 'd-none';
-      searchPokemon(fetchContent, content, event.target.getAttribute('alt'));
-    });
-  }).catch( (error) => {
-
-      console.log(error);
-    })
+        /* När användaren klickar på en pokemon-bild så ska
+         * allt i #fetchContent döljas för att få fram searchPokemon()-resultatet,
+         * dvs. mer specifik information om den pokemon
+         * användaren har klickat på.
+         * searchPokemon skickar alt-attributet från klick-eventet som parameter */
+        spinner.classList.add('spinner-border', 'text-danger');
+        fetchContent.className = 'd-none';
+        searchPokemon(spinner, fetchContent, content, event.target.getAttribute('alt'));
+      });
+    }).catch( error => { console.log(error); } )
   }
 }
 
-const searchPokemon = (fetchContent, content, query) => {
+const searchPokemon = (spinner, fetchContent, content, query) => {
 
   /* .replace(' ', '-') på query används för att
    * t.ex. en sökning på "tapu lele" ska omvandlas
    * till "tapu-lele", så att sökningen går igenom. */
-  window.fetch('https://pokeapi.co/api/v2/pokemon/' + query.replace(' ', '-'))
-  .then( (response) => {
+  let q = query.replace(' ', '-');
+  window.fetch('https://pokeapi.co/api/v2/pokemon/' + q)
+  .then( response => {
 
     /* Om response är annat än OK (t.ex. 404)
      * skapas ett felmeddelande. */
     if(!response.ok || query == '') {
 
-      felmeddelande(query);
+      felmeddelande(spinner, query);
     } else {
 
       return response.json();
     }
   })
-  .then( (data) => {
+  .then( data => {
 
+    spinner.className = 'spinner-border text-danger';
     fetchContent.className = 'd-none';
 
     /* Skapar ett bildkort med bild på den pokemon man sökt efter,
@@ -162,47 +162,58 @@ const searchPokemon = (fetchContent, content, query) => {
 
     let cardImage = document.createElement('img');
     cardImage.classList.add('card-image-top');
+    cardImage.src = data.sprites.other.home.front_default;
+    cardImage.alt = data.name;
+    cardImage.style.backgroundColor = '#FFFFFC';
 
-    /* För att få tillgång till bilden under "official-artwork.front_default"
-     * behövde jag använda "['official-artwork'].front_default".
-     * cardImage.src kan inte ha attribut med bindestreck. */
-    cardImage.src = data.sprites.other['official-artwork'].front_default;
-    cardImage.alt = data.species.name;
-    cardImage.style.backgroundColor = '#A8DADC';
+    /* EventListener vid mouseover och mouseout
+     * för att byta mellan shiny och original-bild. */
+    cardImage.addEventListener('mouseover', () => {
+
+      if(cardImage.src !== data.sprites.other.home.front_shiny) {
+
+        cardImage.src = data.sprites.other.home.front_shiny;
+      }
+    });
+
+    /* EventListener */
+    cardImage.addEventListener('mouseout', () => {
+
+      if(cardImage.src == data.sprites.other.home.front_shiny) {
+
+        cardImage.src = data.sprites.other.home.front_default;
+      }
+    });
+
     card.appendChild(cardImage);
 
     let cardBody = document.createElement('figcaption');
     cardBody.classList.add('card-body');
-    cardBody.style.backgroundColor = '#A8DADC';
+    cardBody.style.backgroundColor = '#FFFFFC';
     card.appendChild(cardBody);
 
     /* Linebreak för att skilja mellan bild och text. */
     let cardImageLinebreak = document.createElement('hr');
     cardBody.appendChild(cardImageLinebreak);
 
-    let cardTitle = document.createElement('h3');
+    let cardTitle = document.createElement('h4');
     cardTitle.classList.add('card-title');
     let cardTitleNode = document.createTextNode(data.name.toUpperCase()  + ' #' + data.id);
     cardTitle.style.textAlign = 'center';
     cardTitle.appendChild(cardTitleNode);
     cardBody.appendChild(cardTitle);
 
-    /* Append card till content */
-    content.appendChild(card);
-
     /* Skapar ett infokort med information om den pokemon man sökt efter */
     let infoCard = document.createElement('section');
     infoCard.classList.add('card');
     infoCard.style.width = '25rem';
-    /* Append infoCard till content */
-    content.appendChild(infoCard);
 
     let infoCardBody = document.createElement('article');
     infoCardBody.classList.add('card-body');
-    infoCardBody.style.backgroundColor = '#F1FAEE';
+    infoCardBody.style.backgroundColor = '#FFFFFC';
     infoCard.appendChild(infoCardBody);
 
-    let infoCardTitle = document.createElement('h1');
+    let infoCardTitle = document.createElement('h2');
     infoCardTitle.classList.add('card-title');
     infoCardTitle.style.textAlign = 'center';
     infoCardBody.appendChild(infoCardTitle);
@@ -218,7 +229,7 @@ const searchPokemon = (fetchContent, content, query) => {
     infoCardPre.style.margin = '0';
 
     /* Skapar textnoder för alla stats.
-     * append till pre för att kunna ha kvar radbrytningar. */
+     * append till pre för att kunna ha kvar radbrytningar '\n'. */
     let typeNode = document.createTextNode('Type: ' + data.types[0].type.name.toUpperCase() + '\n');
     let baseXPNode = document.createTextNode('Base XP: ' + data.base_experience + '\n');
     let baseHPNode = document.createTextNode('Base HP: ' + data.stats[0].base_stat + '\n');
@@ -237,18 +248,15 @@ const searchPokemon = (fetchContent, content, query) => {
 
     if(data.game_indices.length !== 0) {
 
-      /* Skapar en table för att lägga in spelen karaktären kan hittas i.
-       * Två for-loopar för att dela upp så att listan inte blir för lång.
-       * Listan blir 10*2 */
       let infoCardFoundIn = document.createTextNode('Can be found in: ');
       infoCardPre.appendChild(infoCardFoundIn);
 
       let gameTable = document.createElement('table');
       let gameList = document.createElement('tr');
-
       /* För att dela upp i två listor */
       gameList.style = 'column-count: 2';
 
+      /* forEach-loop för att få ut alla titelnamn */
       data.game_indices.forEach( game => {
 
         let gameListTD = document.createElement('td');
@@ -262,23 +270,30 @@ const searchPokemon = (fetchContent, content, query) => {
     infoCardPre.appendChild(gameTable);
     } else {
 
-      let infoCardNotFoundIn = document.createTextNode(`Can't be found in-game.`);
+      let infoCardNotFoundIn = document.createTextNode('Cannot be found in game.');
       infoCardPre.appendChild(infoCardNotFoundIn);
     }
-  }).catch( (error) => {
 
-    console.log(error);
-  });
+    /* Timer medan content laddar. */
+    let contentTO = setTimeout( () => {
+
+      spinner.className = 'd-none';
+      /* Append card till content */
+      content.appendChild(card);
+      /* Append infoCard till content */
+      content.appendChild(infoCard);
+    }, 500);
+  }).catch( error => { console.log(error); } );
 }
 
 /* Skapar ett felmeddelande om användaren söker efter
- * en pokemon som inte finns i API:et */
-const felmeddelande = (query) => {
+ * en pokemon som inte finns i API:et
+ * eller en tom sträng */
+const felmeddelande = (spinner, query) => {
 
   let felCard = document.createElement('figure');
   felCard.classList.add('card', 'bg-danger');
   felCard.style.width = '25rem';
-  content.appendChild(felCard);
 
   let felCardImage = document.createElement('img');
   felCardImage.classList.add('card-image-top');
@@ -295,15 +310,21 @@ const felmeddelande = (query) => {
 
   if(query !== '') {
 
-    let felCardTitleNode = document.createTextNode(`ditto hittade inte "${query}"` + ' i databasen. försök igen!');
+    let felCardTitleNode = document.createTextNode(`Ditto could not find "${query}"` + ' in the database. Try again!');
     felCardTitle.style.textAlign = 'center';
     felCardTitle.appendChild(felCardTitleNode);
   } else {
 
-    let felCardTitleNode = document.createTextNode('ditto kan inte hitta en tom sökning i databasen. försök igen!');
+    let felCardTitleNode = document.createTextNode('Empty query. Try again!');
     felCardTitle.style.textAlign = 'center';
     felCardTitle.appendChild(felCardTitleNode);
   }
-
   felCardBody.appendChild(felCardTitle);
+
+  /* Timer medan felmeddelande laddar. */
+  let felmeddelandeTO = setTimeout( () => {
+
+    spinner.className = 'd-none';
+    content.appendChild(felCard);
+  }, 500);
 }
