@@ -33,6 +33,7 @@ window.addEventListener('load', () => {
   /* Timer medan fetchContent laddar. */
   let fetchContentTO = setTimeout( () => {
 
+    /* Döljer spinner. */
     spinner.classList.add('d-none');
     fetchContent.classList.remove('d-none');
     fetchContent.classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
@@ -41,7 +42,8 @@ window.addEventListener('load', () => {
 
 const fetchAllPokemons = (fetchContent) => {
 
-  /* Med lite inspiration ang. hur jag kan lösa Promise.all från: https://codepen.io/jamesqquick/pen/NWKaNQz */
+  /* Med lite inspiration ang. hur jag kan lösa Promise.all från:
+   * https://codepen.io/jamesqquick/pen/NWKaNQz */
   let allPromises = [];
   for(let i = 1; i <= 493; i++) {
 
@@ -119,14 +121,14 @@ const fetchAllPokemons = (fetchContent) => {
 
         /* När användaren klickar på en pokemon-bild så ska
          * allt i #fetchContent döljas för att få fram searchPokemon()-resultatet,
-         * dvs. mer specifik information om den pokemon
-         * användaren har klickat på.
-         * searchPokemon skickar alt-attributet från klick-eventet som parameter */
+         * dvs. mer specifik information om den pokemon användaren har klickat på.
+         * searchPokemon skickar alt-attributet från klick-eventet som parameter
+         * för sökning. */
         spinner.classList.add('spinner-border', 'text-danger');
         fetchContent.className = 'd-none';
         searchPokemon(spinner, fetchContent, content, event.target.getAttribute('alt'));
       });
-    }).catch( error => { console.log(error); } )
+    }).catch( error => { console.log(error); } );
   }
 }
 
@@ -252,19 +254,19 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
       infoCardPre.appendChild(infoCardFoundIn);
 
       let gameTable = document.createElement('table');
-      let gameList = document.createElement('tr');
+      let gameTR = document.createElement('tr');
       /* För att dela upp i två listor */
-      gameList.style = 'column-count: 2';
+      gameTR.style = 'column-count: 2';
 
       /* forEach-loop för att få ut alla titelnamn */
       data.game_indices.forEach( game => {
 
-        let gameListTD = document.createElement('td');
-        let gameListTDNode = document.createTextNode('Pokémon ' + game.version.name.replace('-', ' ').toUpperCase());
+        let gameTD = document.createElement('td');
+        let gameTDNode = document.createTextNode('Pokémon ' + game.version.name.replace('-', ' ').toUpperCase());
 
-        gameListTD.appendChild(gameListTDNode);
-        gameList.appendChild(gameListTD);
-        gameTable.appendChild(gameList);
+        gameTD.appendChild(gameTDNode);
+        gameTR.appendChild(gameTD);
+        gameTable.appendChild(gameTR);
       });
 
     infoCardPre.appendChild(gameTable);
@@ -277,6 +279,7 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
     /* Timer medan content laddar. */
     let contentTO = setTimeout( () => {
 
+      /* Döljer spinner. */
       spinner.className = 'd-none';
       /* Append card till content */
       content.appendChild(card);
@@ -324,7 +327,9 @@ const felmeddelande = (spinner, query) => {
   /* Timer medan felmeddelande laddar. */
   let felmeddelandeTO = setTimeout( () => {
 
+    /* Döljer spinner. */
     spinner.className = 'd-none';
+    /* Append felCard till content. */
     content.appendChild(felCard);
   }, 500);
 }
