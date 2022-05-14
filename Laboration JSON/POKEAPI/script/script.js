@@ -164,28 +164,9 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
 
     let cardImage = document.createElement('img');
     cardImage.classList.add('card-image-top');
-    cardImage.src = data.sprites.other.home.front_default;
+    cardImage.src = data.sprites.other['official-artwork'].front_default;
     cardImage.alt = data.name;
     cardImage.style.backgroundColor = '#FFFFFC';
-
-    /* EventListener vid mouseover och mouseout
-     * för att byta mellan shiny och original-bild. */
-    cardImage.addEventListener('mouseover', () => {
-
-      if(cardImage.src !== data.sprites.other.home.front_shiny) {
-
-        cardImage.src = data.sprites.other.home.front_shiny;
-      }
-    });
-
-    /* EventListener */
-    cardImage.addEventListener('mouseout', () => {
-
-      if(cardImage.src == data.sprites.other.home.front_shiny) {
-
-        cardImage.src = data.sprites.other.home.front_default;
-      }
-    });
 
     card.appendChild(cardImage);
 
