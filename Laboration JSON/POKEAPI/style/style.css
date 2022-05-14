@@ -1,8 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@500&display=swap');
+
+/* https://coolors.co/palette/ef476f-ffd166-06d6a0-118ab2-073b4c */
 
 body  {
 
-  font-family: 'kanit', sans-serif;
+  font-family: 'Source Code Pro', monospace;
   background-color: #FFFFFC;
 
   /* Gömmer scroll bar för Edge och Firefox  */
@@ -14,6 +16,39 @@ body  {
 body::-webkit-scrollbar {
 
   display: none;
+}
+
+.bg-danger {
+
+  background-color: #EF476F !important;
+}
+
+.btn {
+
+  background-color: #EF476F !important;
+  color: #FFFFFC !important;
+}
+
+.btn:hover {
+
+  background-color: #073B4C !important;
+}
+
+h1 {
+
+  font-size: 7rem;
+  color: #FFFFFC;
+}
+
+h2, h4, h6, pre {
+
+  font-family: 'Source Code Pro', monospace;
+  color: #073B4C;
+}
+
+hr {
+
+  border-top: 1px solid #073B4C;
 }
 
 #nav-img {
@@ -38,7 +73,7 @@ body::-webkit-scrollbar {
 .card {
 
   margin: 0 5px 5px 0;
-  border: 1px solid #1D3557;
+  border: 1px solid #073B4C;
   border-radius: 0;
 }
 
