@@ -83,7 +83,7 @@ table, tr, td {
 }
 
 @media screen and (max-width: 1532px) {
-  
+
   #fetchContent {
 
     max-width: 1100px;
@@ -94,7 +94,7 @@ table, tr, td {
 
   h1 {
 
-    font-size: 1rem;
+    font-size: 3rem;
   }
 
   #fetchContent {
