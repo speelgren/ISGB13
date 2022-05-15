@@ -23,6 +23,11 @@ body::-webkit-scrollbar {
   background-color: #EF476F !important;
 }
 
+.text-danger {
+
+  color: #EF476F !important;
+}
+
 .btn {
 
   background-color: #EF476F !important;

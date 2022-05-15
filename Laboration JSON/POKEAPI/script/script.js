@@ -22,7 +22,7 @@ window.addEventListener('load', () => {
   /* EventListener för click / hideAndClear-funktion. */
   document.querySelector('.btn').addEventListener('click', () => {
 
-    /* Det nedan används för att dölja och sedan visa alla pokemons.
+    /* Nedan används för att dölja och sedan visa alla pokemons.
      * Detta för att inte fetcha alla pokemons varje gång
      * användaren klickar in på en specifik pokemon. */
     fetchContent.classList.remove('d-none');
@@ -33,7 +33,7 @@ window.addEventListener('load', () => {
   /* Timer medan fetchContent laddar. */
   let fetchContentTO = setTimeout( () => {
 
-    /* Döljer spinner. */
+    /* Döljer spinner och visar fetchContent */
     spinner.classList.add('d-none');
     fetchContent.classList.remove('d-none');
     fetchContent.classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
@@ -51,7 +51,7 @@ const fetchAllPokemons = (fetchContent) => {
      * och then-funktionen (+ response.json();), i slutet
      * av allPromises-vektorn. Promise.all(allPromises)
      * för att begära promise-objekt för alla anrop till API:et */
-    allPromises.push(fetch('https://pokeapi.co/api/v2/pokemon/' + i)
+    allPromises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`)
     .then( response => { return response.json(); } )
     )
     Promise.all(allPromises)
@@ -77,6 +77,8 @@ const fetchAllPokemons = (fetchContent) => {
       let cardFigureImage = document.createElement('img');
       cardFigureImage.src = pokeData.sprites.front_default;
       cardFigureImage.alt = pokeData.name;
+      cardFigureImage.style.width = '158px';
+      cardFigureImage.style.height = '158px';
       cardFigureImage.loading = 'lazy';
       cardFigure.appendChild(cardFigureImage);
 
@@ -89,7 +91,7 @@ const fetchAllPokemons = (fetchContent) => {
       cardFigureTitle.classList.add('card-title');
       cardFigureTitle.style.fontSize = '0.85rem';
       cardFigureTitle.style.textAlign = 'center';
-      let cardFigureTitleNode = document.createTextNode(pokeData.name.toUpperCase() + ' #' + pokeData.id);
+      let cardFigureTitleNode = document.createTextNode(`${pokeData.name.toUpperCase()} #${pokeData.id}`);
       cardFigureTitle.appendChild(cardFigureTitleNode);
       cardFigureBody.appendChild(cardFigureTitle);
 
@@ -138,7 +140,7 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
    * t.ex. en sökning på "tapu lele" ska omvandlas
    * till "tapu-lele", så att sökningen går igenom. */
   let q = query.replace(' ', '-');
-  window.fetch('https://pokeapi.co/api/v2/pokemon/' + q)
+  window.fetch(`https://pokeapi.co/api/v2/pokemon/${q}`)
   .then( response => {
 
     /* Om response är annat än OK (t.ex. 404)
@@ -181,7 +183,7 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
 
     let cardTitle = document.createElement('h4');
     cardTitle.classList.add('card-title');
-    let cardTitleNode = document.createTextNode(data.name.toUpperCase()  + ' #' + data.id);
+    let cardTitleNode = document.createTextNode(`${data.name.toUpperCase()} #${data.id}`);
     cardTitle.style.textAlign = 'center';
     cardTitle.appendChild(cardTitleNode);
     cardBody.appendChild(cardTitle);
@@ -207,25 +209,22 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
     let infoCardLinebreak = document.createElement('hr');
     infoCardTitle.appendChild(infoCardLinebreak);
 
+    let infoCardParagraph = document.createElement('p');
     let infoCardPre = document.createElement('pre');
     infoCardPre.classList.add('card-text');
     infoCardPre.style.margin = '0';
 
-    /* Skapar textnoder för alla stats.
-     * append till pre för att kunna ha kvar radbrytningar '\n'. */
-    let typeNode = document.createTextNode('Type: ' + data.types[0].type.name.toUpperCase() + '\n');
-    let baseXPNode = document.createTextNode('Base XP: ' + data.base_experience + '\n');
-    let baseHPNode = document.createTextNode('Base HP: ' + data.stats[0].base_stat + '\n');
-    let heightNode = document.createTextNode('Height: ' + data.height * 10 + 'cm' + '\n');
-    let weightNode = document.createTextNode('Weight: ' + data.weight / 10 + 'kg' + '\n\n');
+    /* Skapar textNode för alla stats.
+     * append till pre för att kunna behålla radbrytningar '\n'. */
+    let statsNode = document.createTextNode(
+      `Type: ${data.types[0].type.name.toUpperCase()}\n` +
+      `Base XP: ${data.base_experience}\n` +
+      `Base HP: ${data.stats[0].base_stat}\n` +
+      `Height: ${data.height * 10}cm\n` +
+      `Weight: ${data.weight / 10}kg\n\n`
+    );
 
-    infoCardPre.appendChild(typeNode);
-    infoCardPre.appendChild(baseXPNode);
-    infoCardPre.appendChild(baseHPNode);
-    infoCardPre.appendChild(heightNode);
-    infoCardPre.appendChild(weightNode);
-
-    let infoCardParagraph = document.createElement('p');
+    infoCardPre.appendChild(statsNode);
     infoCardParagraph.appendChild(infoCardPre);
     infoCardBody.appendChild(infoCardParagraph);
 
@@ -243,7 +242,7 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
       data.game_indices.forEach( game => {
 
         let gameTD = document.createElement('td');
-        let gameTDNode = document.createTextNode('Pokémon ' + game.version.name.replace('-', ' ').toUpperCase());
+        let gameTDNode = document.createTextNode(`Pokémon ${game.version.name.replace('-', ' ').toUpperCase()}`);
 
         gameTD.appendChild(gameTDNode);
         gameTR.appendChild(gameTD);
@@ -294,7 +293,7 @@ const felmeddelande = (spinner, query) => {
 
   if(query !== '') {
 
-    let felCardTitleNode = document.createTextNode(`Ditto could not find "${query}"` + ' in the database. Try again!');
+    let felCardTitleNode = document.createTextNode(`Ditto could not find "${query}" in the database. Try again!`);
     felCardTitle.style.textAlign = 'center';
     felCardTitle.appendChild(felCardTitleNode);
   } else {
