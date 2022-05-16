@@ -2,13 +2,15 @@
 
 window.addEventListener('load', () => {
 
+  let form = document.querySelector('#form');
+  let button = document.querySelector('#button');
   let spinner = document.querySelector('#spinner');
   let fetchContent = document.querySelector('#fetchContent');
   let content = document.querySelector('#content');
   fetchAllPokemons(fetchContent);
 
   /* EventListener för submit / searchPokemon-funktion. */
-  document.querySelector('#form').addEventListener('submit', (event) => {
+  form.addEventListener('submit', (event) => {
 
     event.preventDefault();
     let searchValue = document.querySelector('#search').value;
@@ -20,7 +22,7 @@ window.addEventListener('load', () => {
   });
 
   /* EventListener för click / hideAndClear-funktion. */
-  document.querySelector('.btn').addEventListener('click', () => {
+  button.addEventListener('click', () => {
 
     /* Nedan används för att dölja och sedan visa alla pokemons.
      * Detta för att inte fetcha alla pokemons varje gång
@@ -96,27 +98,21 @@ const fetchAllPokemons = (fetchContent) => {
       cardFigureBody.appendChild(cardFigureTitle);
 
       /* EventListener vid mouseover, "hover", över en pokemon
-       * för att ändra bakgrundfärg och bilden till shiny-versionen. */
+       * för att ändra bilden till shiny-versionen samt bakgrunds- och textfärg. */
       cardFigure.addEventListener('mouseover', () => {
-
-        if (cardFigureImage.src !== pokeData.sprites.front_shiny) {
 
           cardFigureImage.src = pokeData.sprites.front_shiny;
           cardFigure.style.backgroundColor = '#EF476F';
           cardFigureTitle.style.color = '#FFFFFC';
-        }
       });
 
-      /* EventListener för att ändra tillbaka till original-
-       * bakgrundfärg och bild när användaren tar bort musen från bilden. */
+      /* EventListener för att ändra tillbaka till original bilden
+       * samt bakgrunds- och textfärg när användaren tar bort musen från bilden. */
       cardFigure.addEventListener('mouseout', () => {
-
-        if (cardFigureImage.src == pokeData.sprites.front_shiny) {
 
           cardFigureImage.src = pokeData.sprites.front_default;
           cardFigure.style.backgroundColor = '#FFFFFC';
           cardFigureTitle.style.color = '#073B4C';
-        }
       });
 
       cardFigureImage.addEventListener('click', (event) => {

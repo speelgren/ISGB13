@@ -19,7 +19,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
     </button>
-    <button class="btn">HOME</button>
+    <button class="btn" id="button">HOME</button>
 
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -45,14 +45,14 @@
   <main class="container-fluid">
     <!-- spinner medan fetchContent laddar. -->
     <div class="d-flex justify-content-center">
-      <div id="spinner" class="spinner-border text-danger" role="status">
+      <div class="spinner-border text-danger" role="status" id="spinner">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <section id="fetchContent" class="d-none">
+    <section class="d-none" id="fetchContent">
       <!-- alla pokemon här. -->
     </section>
-    <section id="content" class="my-4 d-flex flex-wrap justify-content-center">
+    <section class="my-4 d-flex flex-wrap justify-content-center" id="content">
       <!-- all specifik info om pokemon här. -->
     </section>
   </main>
