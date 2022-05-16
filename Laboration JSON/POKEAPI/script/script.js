@@ -8,7 +8,7 @@ window.addEventListener('load', () => {
   fetchAllPokemons(fetchContent);
 
   /* EventListener för submit / searchPokemon-funktion. */
-  document.querySelector('#form').addEventListener('submit', (event) => {
+  document.querySelector('#form').addEventListener('submit', ( event ) => {
 
     event.preventDefault();
     let searchValue = document.querySelector('#search').value;
@@ -45,13 +45,13 @@ const fetchAllPokemons = (fetchContent) => {
   /* Med lite inspiration ang. hur jag kan lösa Promise.all från:
    * https://codepen.io/jamesqquick/pen/NWKaNQz */
   let allPromises = [];
-  for(let i = 1; i <= 493; i++) {
+  for(let pokeName = 1; pokeName <= 493; pokeName++) {
 
     /* .push() används för att lägga till fetch-anropet-
      * och then-funktionen (+ response.json();), i slutet
      * av allPromises-vektorn. Promise.all(allPromises)
      * för att begära promise-objekt för alla anrop till API:et */
-    allPromises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`)
+    allPromises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`)
     .then( response => { return response.json(); } )
     )
     Promise.all(allPromises)
@@ -119,7 +119,7 @@ const fetchAllPokemons = (fetchContent) => {
         }
       });
 
-      cardFigureImage.addEventListener('click', (event) => {
+      cardFigureImage.addEventListener('click', ( event ) => {
 
         /* När användaren klickar på en pokemon-bild så ska
          * allt i #fetchContent döljas för att få fram searchPokemon()-resultatet,
@@ -130,7 +130,7 @@ const fetchAllPokemons = (fetchContent) => {
         fetchContent.className = 'd-none';
         searchPokemon(spinner, fetchContent, content, event.target.getAttribute('alt'));
       });
-    }).catch( error => { console.log(error); } );
+    }).catch( error => { console.log( error ); } );
   }
 }
 
@@ -217,11 +217,11 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
     /* Skapar textNode för alla stats.
      * append till pre för att kunna behålla radbrytningar '\n'. */
     let statsNode = document.createTextNode(
-      `Type: ${data.types[0].type.name.toUpperCase()}\n` +
-      `Base XP: ${data.base_experience}\n` +
-      `Base HP: ${data.stats[0].base_stat}\n` +
-      `Height: ${data.height * 10}cm\n` +
-      `Weight: ${data.weight / 10}kg\n\n`
+      `Type: ${data.types[0].type.name.toUpperCase()}\n`
+    + `Base XP: ${data.base_experience}\n`
+    + `Base HP: ${data.stats[0].base_stat}\n`
+    + `Height: ${data.height * 10}cm\n`
+    + `Weight: ${data.weight / 10}kg\n\n`
     );
 
     infoCardPre.appendChild(statsNode);
@@ -266,7 +266,7 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
       /* Append infoCard till content */
       content.appendChild(infoCard);
     }, 500);
-  }).catch( error => { console.log(error); } );
+  }).catch( error => { console.log( error ); } );
 }
 
 /* Skapar ett felmeddelande om användaren söker efter

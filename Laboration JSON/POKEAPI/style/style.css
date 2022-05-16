@@ -43,6 +43,7 @@ h1 {
 
   font-size: 7rem;
   color: #FFFFFC;
+  user-select: none;
 }
 
 h2, h4, h6, pre {
