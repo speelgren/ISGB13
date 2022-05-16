@@ -236,7 +236,7 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
       let gameTable = document.createElement('table');
       let gameTR = document.createElement('tr');
       /* För att dela upp i två listor */
-      gameTR.style = 'column-count: 2';
+      gameTR.style.columnCount = '2';
 
       /* forEach-loop för att få ut alla titelnamn */
       data.game_indices.forEach( game => {
