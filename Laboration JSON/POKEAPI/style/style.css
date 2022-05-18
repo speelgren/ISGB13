@@ -7,12 +7,14 @@ body  {
   font-family: 'Source Code Pro', monospace;
   background-color: #FFFFFC;
 
-  /* Gömmer scroll bar för Edge och Firefox  */
+  /* Gömmer scroll bar för Edge och Firefox.
+   * https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-/* Gömmer scroll bar för Chrome och Safari */
+/* Gömmer scroll bar för Chrome och Safari
+ * https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */
 body::-webkit-scrollbar {
 
   display: none;

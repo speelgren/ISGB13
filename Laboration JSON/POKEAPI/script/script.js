@@ -151,6 +151,8 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
   })
   .then( data => {
 
+    /* För att tömma sökrutan efter sökning */
+    document.querySelector('#search').value = null;
     spinner.className = 'spinner-border text-danger';
     fetchContent.className = 'd-none';
 
