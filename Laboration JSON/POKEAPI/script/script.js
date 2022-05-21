@@ -47,7 +47,7 @@ const fetchAllPokemons = (fetchContent) => {
   /* Med lite inspiration ang. hur jag kan lösa Promise.all från:
    * https://codepen.io/jamesqquick/pen/NWKaNQz */
   let allPromises = [];
-  for (let pokeName = 1; pokeName <= 493; pokeName++) {
+  for (let pokeName = 1; pokeName <= 898; pokeName++) {
 
     /* .push() används för att lägga till fetch-anropet-
      * och then-funktionen (+ response.json();), i slutet
@@ -61,7 +61,7 @@ const fetchAllPokemons = (fetchContent) => {
 
       /* All data sparas i en vektor, från 1 till 493.
        * Använder .pop(); för att hämta ut det sita resultatet
-       * i data (vektorn med alla 493-index)
+       * i data (vektorn med alla 898-index)
        * och sparar det i variabeln pokeData.
        * Får på så sätt tillgång till alla pokemons
        * och kan presentera dem i ett slags "kollage". */
