@@ -1,6 +1,6 @@
 'use strict';
 
-window.addEventListener('load', () => {
+window.addEventListener('DOMContentLoaded', () => {
 
   let form = document.querySelector('#form');
   let button = document.querySelector('#button');
@@ -10,7 +10,7 @@ window.addEventListener('load', () => {
   fetchAllPokemons(fetchContent);
 
   /* EventListener för submit / searchPokemon-funktion. */
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', event => {
 
     event.preventDefault();
     let searchValue = document.querySelector('#search').value;
@@ -24,9 +24,6 @@ window.addEventListener('load', () => {
   /* EventListener för click / hideAndClear-funktion. */
   button.addEventListener('click', () => {
 
-    /* Nedan används för att dölja och sedan visa alla pokemons.
-     * Detta för att inte fetcha alla pokemons varje gång
-     * användaren klickar in på en specifik pokemon. */
     fetchContent.classList.remove('d-none');
     fetchContent.classList.add('my-4', 'd-flex', 'flex-wrap', 'justify-content-center');
     content.innerHTML = null;
@@ -42,29 +39,19 @@ window.addEventListener('load', () => {
   }, 1500);
 });
 
-const fetchAllPokemons = (fetchContent) => {
+const fetchAllPokemons = fetchContent => {
 
-  /* Med lite inspiration ang. hur jag kan lösa Promise.all från:
-   * https://codepen.io/jamesqquick/pen/NWKaNQz */
   let allPromises = [];
-  for (let pokeName = 1; pokeName <= 898; pokeName++) {
+  for (let pokeID = 1; pokeID <= 493; pokeID++) {
 
-    /* .push() används för att lägga till fetch-anropet-
-     * och then-funktionen (+ response.json();), i slutet
-     * av allPromises-vektorn. Promise.all(allPromises)
-     * för att begära promise-objekt för alla anrop till API:et */
-    allPromises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`)
+    allPromises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${pokeID}`)
     .then( response => { return response.json(); } )
     )
     Promise.all(allPromises)
     .then( data => {
 
-      /* All data sparas i en vektor, från 1 till 493.
-       * Använder .pop(); för att hämta ut det sita resultatet
-       * i data (vektorn med alla 898-index)
-       * och sparar det i variabeln pokeData.
-       * Får på så sätt tillgång till alla pokemons
-       * och kan presentera dem i ett slags "kollage". */
+      /* All data sparas i en vektor.
+       * Använder .pop() för att hämta sista index i vektorn */
       let pokeData = data.pop();
 
       let cardFigure = document.createElement('figure');
@@ -97,8 +84,8 @@ const fetchAllPokemons = (fetchContent) => {
       cardFigureTitle.appendChild(cardFigureTitleNode);
       cardFigureBody.appendChild(cardFigureTitle);
 
-      /* EventListener vid mouseover, "hover", över en pokemon
-       * för att ändra bilden till shiny-versionen samt bakgrunds- och textfärg. */
+      /* EventListener för mouseover-metod */
+      /* Ändrar bild och bakgrundsfärg på kort */
       cardFigure.addEventListener('mouseover', () => {
 
           cardFigureImage.src = pokeData.sprites.front_shiny;
@@ -106,35 +93,27 @@ const fetchAllPokemons = (fetchContent) => {
           cardFigureTitle.style.color = '#FFFFFC';
       });
 
-      /* EventListener för att ändra tillbaka till original bilden
-       * samt bakgrunds- och textfärg när användaren tar bort musen från bilden. */
-      cardFigure.addEventListener('mouseout', () => {
+      /* EventListener för mouseover-metod */
+      /* Ändrar bild och bakgrundsfärg på kort */      cardFigure.addEventListener('mouseout', () => {
 
           cardFigureImage.src = pokeData.sprites.front_default;
           cardFigure.style.backgroundColor = '#FFFFFC';
           cardFigureTitle.style.color = '#073B4C';
       });
 
-      cardFigureImage.addEventListener('click', (event) => {
+      /* EventListener för klick på en Pokémon i kollaget */
+      cardFigureImage.addEventListener('click', event => {
 
-        /* När användaren klickar på en pokemon-bild så ska
-         * allt i #fetchContent döljas för att få fram searchPokemon()-resultatet,
-         * dvs. mer specifik information om den pokemon användaren har klickat på.
-         * searchPokemon skickar alt-attributet från klick-eventet som parameter
-         * för sökning. */
         spinner.classList.add('spinner-border', 'text-danger');
         fetchContent.className = 'd-none';
         searchPokemon(spinner, fetchContent, content, event.target.getAttribute('alt'));
       });
-    }).catch( error => { console.log(error); } );
+    }).catch( error => { console.log( error ); } );
   }
 };
 
 const searchPokemon = (spinner, fetchContent, content, query) => {
 
-  /* .replace(' ', '-') på query används för att
-   * t.ex. en sökning på "tapu lele" ska omvandlas
-   * till "tapu-lele", så att sökningen går igenom. */
   let q = query.replace(' ', '-');
   window.fetch(`https://pokeapi.co/api/v2/pokemon/${q}`)
   .then( response => {
@@ -143,7 +122,7 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
      * skapas ett felmeddelande. */
     if (!response.ok || query == '') {
 
-      felmeddelande(spinner, query);
+      felmeddelande(spinner, query, content);
     } else {
 
       return response.json();
@@ -260,18 +239,19 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
 
       /* Döljer spinner. */
       spinner.className = 'd-none';
+
       /* Append card till content */
-      content.appendChild(card);
+      document.querySelector('#content').appendChild(card);
       /* Append infoCard till content */
-      content.appendChild(infoCard);
+      document.querySelector('#content').appendChild(infoCard);
     }, 500);
-  }).catch( error => { console.log(error); } );
+  }).catch( error => { console.log( error ); } );
 };
 
 /* Skapar ett felmeddelande om användaren söker efter
  * en pokemon som inte finns i API:et
  * eller en tom sträng */
-const felmeddelande = (spinner, query) => {
+const felmeddelande = (spinner, query, content) => {
 
   let felCard = document.createElement('figure');
   felCard.classList.add('card', 'bg-danger');
