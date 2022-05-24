@@ -94,7 +94,8 @@ const fetchAllPokemons = fetchContent => {
       });
 
       /* EventListener för mouseover-metod */
-      /* Ändrar bild och bakgrundsfärg på kort */      cardFigure.addEventListener('mouseout', () => {
+      /* Ändrar bild och bakgrundsfärg på kort */
+      cardFigure.addEventListener('mouseout', () => {
 
           cardFigureImage.src = pokeData.sprites.front_default;
           cardFigure.style.backgroundColor = '#FFFFFC';
