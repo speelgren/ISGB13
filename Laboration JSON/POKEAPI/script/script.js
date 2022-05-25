@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
 const fetchAllPokemons = fetchContent => {
 
   let allPromises = [];
-  for (let pokeID = 1; pokeID <= 493; pokeID++) {
+  for (let pokeID = 1; pokeID <= 151; pokeID++) {
 
     allPromises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${pokeID}`)
     .then( response => { return response.json(); } )
