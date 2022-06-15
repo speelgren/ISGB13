@@ -68,6 +68,7 @@ const fetchAllPokemons = fetchContent => {
       cardFigureImage.alt = pokeData.name;
       cardFigureImage.style.width = '158px';
       cardFigureImage.style.height = '158px';
+      cardFigureImage.style.imageRendering = 'pixelated';
       cardFigureImage.loading = 'lazy';
       cardFigure.appendChild(cardFigureImage);
 
@@ -91,6 +92,7 @@ const fetchAllPokemons = fetchContent => {
           cardFigureImage.src = pokeData.sprites.front_shiny;
           cardFigure.style.backgroundColor = '#EF476F';
           cardFigureTitle.style.color = '#FFFFFC';
+          cardFigureImage.style.imageRendering = 'pixelated';
       });
 
       /* EventListener för mouseover-metod */
@@ -100,6 +102,7 @@ const fetchAllPokemons = fetchContent => {
           cardFigureImage.src = pokeData.sprites.front_default;
           cardFigure.style.backgroundColor = '#FFFFFC';
           cardFigureTitle.style.color = '#073B4C';
+          cardFigureImage.style.imageRendering = 'pixelated';
       });
 
       /* EventListener för klick på en Pokémon i kollaget */
@@ -147,6 +150,7 @@ const searchPokemon = (spinner, fetchContent, content, query) => {
     cardImage.src = data.sprites.other['official-artwork'].front_default;
     cardImage.alt = data.name;
     cardImage.style.backgroundColor = '#FFFFFC';
+    cardImage.style.imageRendering = 'pixelated';
 
     card.appendChild(cardImage);
 
